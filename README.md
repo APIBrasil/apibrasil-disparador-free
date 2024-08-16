@@ -6,22 +6,20 @@ A ideia desse software, é servir como base para outros programadores implementa
 
 Esse é o roadmap planejado para a plataforma 
 
-[ - ]   Login
-
-[ - ]   Importação de contatos excel
-[ - ]   Importação de contatos grupos
-
-[ - ]   Criar templates (texto/arquivos/imagens)
-[ - ]   Editar templates
-[ - ]   Deletar templates 
-
-[ - ]   Criar dispositivo
-[ - ]   Editar dispositivo
-[ - ]   Deletar dispositivo
-
-[ - ]   Criar usuário
-[ - ]   Editar usuário
-[ - ]   Deletar usuário
+| Status  | Tarefa                                      |
+| ------- | --------                                    |
+| Em andamento   |   Login                                     |   
+| Em andamento   |   Importação de contatos excel              |   
+| Em andamento   |   Importação de contatos grupos             |   
+| Em andamento   |   Criar templates (texto/arquivos/imagens)  |   
+| Em andamento   |   Editar templates                          |   
+| Em andamento   |   Deletar templates                         |
+| Em andamento   |   Criar dispositivo                         |   
+| Em andamento   |   Editar dispositivo                        |   
+| Em andamento   |   Deletar dispositivo                       |   
+| Em andamento   |   Criar usuário                             |   
+| Em andamento   |   Editar usuário                            |   
+| Em andamento   |   Deletar usuário                           |   
 
 -------------------------------
 
