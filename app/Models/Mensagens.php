@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Mensagens extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'number',
+        'text',
+        'status',
+        'template_id',
+        'user_id',
+    ];
+
 }

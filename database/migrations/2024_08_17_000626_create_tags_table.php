@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mensagens', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
 
-            $table->string('number')->nullable();
-            $table->string('text')->nullable();
-            $table->string('status')->nullable();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('color')->nullable();
 
-            $table->unsignedBigInteger('template_id')->nullable();
-            $table->foreign('template_id')->references('id')->on('templates');
+            $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mensagens');
+        Schema::dropIfExists('tags');
     }
 };

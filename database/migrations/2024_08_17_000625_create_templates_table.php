@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
+
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->text('text')->nullable();
+            $table->string('path')->nullable();
+            $table->string('type')->nullable();
+
+            $table->enum('status', ['active', 'inactive'])->default('active');
+
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }
