@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tags;
+use App\Models\Disparos;
+use App\Models\Templates;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DisparosController extends Controller
 {
@@ -12,15 +15,20 @@ class DisparosController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $disparos = Disparos::orderBy('id', 'desc')->get();
+        
+        $templates = Templates::orderBy('id', 'desc')
+        ->where('status', 'active')
+        ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $tags = Tags::orderBy('id', 'desc')
+        ->where('status', 'active')
+        ->get();
+
+        return view('admin.disparos')
+        ->with('disparos', $disparos)
+        ->with('templates', $templates)
+        ->with('tags', $tags);
     }
 
     /**
@@ -28,21 +36,34 @@ class DisparosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $disparo = new Disparos();
+
+            $disparo->templates_id = $request->templates_id;
+            $disparo->tag_id = $request->tag_id;
+            $disparo->status = $request->status;
+            $disparo->send_at = $request->send_at;
+
+            $disparo->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Disparo cadastrado com sucesso.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }

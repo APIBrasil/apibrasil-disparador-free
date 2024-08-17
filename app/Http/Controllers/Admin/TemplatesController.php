@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Templates;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TemplatesController extends Controller
 {
@@ -12,7 +13,10 @@ class TemplatesController extends Controller
      */
     public function index()
     {
-        //
+        $templates = Templates::orderBy('id', 'desc')->get();
+
+        return view('admin.templates')
+        ->with('templates', $templates);
     }
 
     /**
@@ -28,7 +32,29 @@ class TemplatesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            
+            $template = new Templates();
+            $template->name = $request->name;
+            $template->description = $request->description;
+            $template->path = $request->path;
+            $template->type = $request->type;
+            $template->text = $request->text;
+            // $template->user_id = auth()->user()->id;
+            $template->status = $request->status;
+            $template->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Template criado com sucesso!'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -36,7 +62,17 @@ class TemplatesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            
+            $template = Templates::find($id);
+
+            return response()->json($template);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -52,7 +88,28 @@ class TemplatesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            
+            $template = Templates::find($id);
+            $template->name = $request->name;
+            $template->description = $request->description;
+            $template->path = $request->path;
+            $template->type = $request->type;
+            $template->text = $request->text;
+            $template->status = $request->status;
+            $template->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Template atualizado com sucesso!'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -60,6 +117,21 @@ class TemplatesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            
+            $template = Templates::find($id);
+            $template->delete();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Template deletado com sucesso!'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

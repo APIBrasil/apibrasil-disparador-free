@@ -8,18 +8,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
-class ContatosController extends Controller
+class TagsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $contatos = Contatos::all();
-        $tags = Tags::orderBy('id', 'desc')->where('status', 'active')->get();
+        $tags = Tags::all();
 
-        return view('admin.contatos')
-        ->with('contatos', $contatos)
+        return view('admin.tags')
         ->with('tags', $tags);
 
     }
@@ -30,15 +28,19 @@ class ContatosController extends Controller
     public function store(Request $request)
     {
         try {
-
+            
             $validation = Validator::make($request->all(), [
                 'name' => 'required',
-                'number' => 'required|max:13|min:11',
+                'description' => 'required|max:255|min:2',
+                'status' => 'required',
+                'color' => 'required',
             ], [
                 'name.required' => 'O campo nome é obrigatório.',
-                'number.required' => 'O campo número é obrigatório.',
-                'number.max' => 'O campo número deve ter no máximo 13 caracteres.',
-                'number.min' => 'O campo número deve ter no mínimo 11 caracteres.',
+                'description.required' => 'O campo descrição é obrigatório.',
+                'description.max' => 'O campo descrição deve ter no máximo 255 caracteres.',
+                'description.min' => 'O campo descrição deve ter no mínimo 2 caracteres.',
+                'status.required' => 'O campo status é obrigatório.',
+                'color.required' => 'O campo cor é obrigatório.',
             ]);
 
             if ($validation->fails()) {
@@ -48,21 +50,18 @@ class ContatosController extends Controller
                 ], 400);
             }
 
-            $request->merge([
-                'number' => preg_replace('/\D/', '', $request->number)
-            ]);
-            
-            $contato = new Contatos();
-            
-            $contato->name = $request->name;
-            $contato->number = $request->number;
-            $contato->tag_id = $request->tag_id;
+            $tag = new Tags();
 
-            $contato->save();
+            $tag->name = $request->name;
+            $tag->description = $request->description;
+            $tag->color = $request->color;
+            $tag->status = $request->status;
+            
+            $tag->save();
 
             return response()->json([
                 'error' => false,
-                'message' => 'Contato cadastrado com sucesso!'
+                'message' => 'Tag criada com sucesso!'
             ]);
 
         } catch (\Exception $e) {
@@ -79,9 +78,10 @@ class ContatosController extends Controller
     public function show(string $id)
     {
         try {
-            $contato = Contatos::find($id);
 
-            return response()->json($contato);
+            $tag = Tags::find($id);
+
+            return response()->json($tag);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -100,12 +100,12 @@ class ContatosController extends Controller
 
             $validation = Validator::make($request->all(), [
                 'name' => 'required',
-                'number' => 'required|max:13|min:11',
+                'description' => 'required|max:255|min:2',
             ], [
                 'name.required' => 'O campo nome é obrigatório.',
-                'number.required' => 'O campo número é obrigatório.',
-                'number.max' => 'O campo número deve ter no máximo 13 caracteres.',
-                'number.min' => 'O campo número deve ter no mínimo 11 caracteres.',
+                'description.required' => 'O campo descrição é obrigatório.',
+                'description.max' => 'O campo descrição deve ter no máximo 255 caracteres.',
+                'description.min' => 'O campo descrição deve ter no mínimo 2 caracteres.',
             ]);
 
             if ($validation->fails()) {
@@ -119,17 +119,18 @@ class ContatosController extends Controller
                 'number' => preg_replace('/\D/', '', $request->number)
             ]);
             
-            $contato = Contatos::find($id);
+            $tag = Tags::find($id);
 
-            $contato->name = $request->name;
-            $contato->number = $request->number;
-            $contato->tag_id = $request->tag_id;
-
-            $contato->save();
+            $tag->name = $request->name;
+            $tag->description = $request->description;
+            $tag->color = $request->color;
+            $tag->status = $request->status;
+            
+            $tag->save();
 
             return response()->json([
                 'error' => false,
-                'message' => 'Contato atualizado com sucesso!'
+                'message' => 'Tag atualizada com sucesso!'
             ]);
 
         } catch (\Exception $e) {
@@ -146,12 +147,13 @@ class ContatosController extends Controller
     public function destroy(string $id)
     {
         try {
-            $contato = Contatos::find($id);
-            $contato->delete();
+
+            $tag = Tags::find($id);
+            $tag->delete();
 
             return response()->json([
                 'error' => false,
-                'message' => 'Contato deletado com sucesso!'
+                'message' => 'Tag removida com sucesso!'
             ]);
 
         } catch (\Exception $e) {
