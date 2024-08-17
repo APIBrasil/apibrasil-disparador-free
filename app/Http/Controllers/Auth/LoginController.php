@@ -44,8 +44,17 @@ class LoginController extends Controller
 
             $token = $response->authorization->token;
             Cookie::queue('token', $token, 60);
+
+            //cookie user
+            $user = json_encode([
+                'first_name' => $response->user->first_name,
+                'email' => $response->user->email,
+                'qt_devices' => $response->user->devices_count,
+            ]);
             
-            return redirect('/')->with('success', $response->message);
+            Cookie::queue('user', $user, 60);
+
+            return redirect('/')->with('success', $response->message)->cookie('token', $token, 60)->cookie('user', $user, 60);
 
         } catch (\GuzzleHttp\Exception\GuzzleException $th) {
             return redirect('login')->with('error', 'Erro ao tentar se conectar ao servidor de autenticação.');
@@ -56,7 +65,7 @@ class LoginController extends Controller
     //logout
     public function logout(): RedirectResponse
     {
-        $token = $_COOKIE['token'];
+        $token = Cookie::get('token');
 
         $client = new Client(['http_errors' => false, 'verify' => false]);
 
