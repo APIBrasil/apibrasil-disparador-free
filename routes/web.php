@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckAuthMiddleware;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\TagsController;
+use App\Http\Controllers\Admin\ContatosController;
+use App\Http\Controllers\Admin\DisparosController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\TemplatesController;
 use App\Http\Controllers\Admin\DispositivosController;
 
 #router group
@@ -11,27 +15,43 @@ use App\Http\Controllers\Admin\DispositivosController;
 Route::group(['middleware' => CheckAuthMiddleware::class], function () {
     
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::group(['prefix' => 'tags'], function () {
+        Route::get('/', [TagsController::class, 'index'])->name('tags.index');
+        Route::get('/{id}/show', [TagsController::class, 'show'])->name('tags.show');
+        Route::post('/store', [TagsController::class, 'store'])->name('tags.store');
+        Route::patch('/{id}/update', [TagsController::class, 'update'])->name('tags.update');
+        Route::delete('/{id}/destroy', [TagsController::class, 'destroy'])->name('tags.destroy');
+    });
 
-    Route::get('/disparos', function () {
-        return view('admin.disparos');
+    Route::group(['prefix' => 'contatos'], function () {
+        Route::get('/', [ContatosController::class, 'index'])->name('contatos.index');
+        Route::get('/{id}/show', [ContatosController::class, 'show'])->name('contatos.show');
+        Route::post('/store', [ContatosController::class, 'store'])->name('contatos.store');
+        Route::patch('/{id}/update', [ContatosController::class, 'update'])->name('contatos.update');
+        Route::delete('/{id}/destroy', [ContatosController::class, 'destroy'])->name('contatos.destroy');
     });
 
     Route::get('/dispositivos', [DispositivosController::class, 'index'])->name('dispositivos');
 
-    Route::get('/conexoes', function () {
-        return view('admin.conexoes');
+    Route::group(['prefix' => 'templates'], function () {
+        Route::get('/', [TemplatesController::class, 'index'])->name('templates.index');
+        Route::get('/{id}/show', [TemplatesController::class, 'show'])->name('templates.show');
+        Route::post('/store', [TemplatesController::class, 'store'])->name('templates.store');
+        Route::patch('/{id}/update', [TemplatesController::class, 'update'])->name('templates.update');
+        Route::delete('/{id}/destroy', [TemplatesController::class, 'destroy'])->name('templates.destroy');
     });
-
-    Route::get('/contatos', function () {
-        return view('admin.contatos');
+    
+    Route::group(['prefix' => 'disparos'], function () {
+        Route::get('/', [DisparosController::class, 'index'])->name('disparos.index');
+        Route::get('/{id}/show', [DisparosController::class, 'show'])->name('disparos.show');
+        Route::post('/store', [DisparosController::class, 'store'])->name('disparos.store');
+        Route::patch('/{id}/update', [DisparosController::class, 'update'])->name('disparos.update');
+        Route::delete('/{id}/destroy', [DisparosController::class, 'destroy'])->name('disparos.destroy');
     });
 
     Route::get('/historico', function () {
         return view('admin.historico');
-    });
-
-    Route::get('/templates', function () {
-        return view('admin.templates');
     });
 
 });
@@ -39,23 +59,3 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('auth', [LoginController::class, 'auth'])->name('auth');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-//reset-password
-Route::get('reset-password', function () {
-    return view('reset-password');
-});
-
-//signup
-Route::get('signup', function () {
-    return view('signup');
-});
-
-//docs
-Route::get('docs', function () {
-    return view('docs');
-});
-
-//help
-Route::get('blank', function () {
-    return view('blank');
-});
