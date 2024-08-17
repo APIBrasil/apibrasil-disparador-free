@@ -1,34 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckAuthMiddleware;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DispositivosController;
 
-Route::get('/', function () {
-    return view('admin.dashboard');
+#router group
+
+Route::group(['middleware' => CheckAuthMiddleware::class], function () {
+    
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/disparos', function () {
+        return view('admin.disparos');
+    });
+
+    Route::get('/dispositivos', [DispositivosController::class, 'index'])->name('dispositivos');
+
+    Route::get('/conexoes', function () {
+        return view('admin.conexoes');
+    });
+
+    Route::get('/contatos', function () {
+        return view('admin.contatos');
+    });
+
+    Route::get('/historico', function () {
+        return view('admin.historico');
+    });
+
+    Route::get('/templates', function () {
+        return view('admin.templates');
+    });
+
 });
 
-Route::get('/disparos', function () {
-    return view('admin.disparos');
-});
-
-Route::get('/conexoes', function () {
-    return view('admin.conexoes');
-});
-
-Route::get('/contatos', function () {
-    return view('admin.contatos');
-});
-
-Route::get('/historico', function () {
-    return view('admin.historico');
-});
-
-Route::get('/templates', function () {
-    return view('admin.templates');
-});
-
-Route::get('login', function () {
-    return view('login');
-});
+Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::post('auth', [LoginController::class, 'auth'])->name('auth');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 //reset-password
 Route::get('reset-password', function () {
@@ -43,21 +53,6 @@ Route::get('signup', function () {
 //docs
 Route::get('docs', function () {
     return view('docs');
-});
-
-//orders
-Route::get('orders', function () {
-    return view('orders');
-});
-
-//orders
-Route::get('consumption', function () {
-    return view('consumption');
-});
-
-//help
-Route::get('help', function () {
-    return view('help');
 });
 
 //help
