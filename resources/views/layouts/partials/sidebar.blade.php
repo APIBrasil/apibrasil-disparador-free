@@ -34,6 +34,15 @@
                          <span class="nav-link-text">Contatos</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @if(request()->is('dispositivos')) active @endif" href="/dispositivos">
+                        <span class="nav-icon">
+                            <i class="fas fa-mobile-alt fa-lg"></i>
+                        </span>
+                         <span class="nav-link-text">Dispositivos</span>
+                    </a>
+                </li>
                 
                 <li class="nav-item has-submenu">
                     <a class="nav-link submenu-toggle @if(request()->is('disparador')) active @elseif(request()->is('templates')) active @endif" href="/disparador" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">

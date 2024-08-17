@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@section('title', 'Página Inicial')
+@section('title', 'Histórico')
 
 @section('content')
     <h1 class="app-page-title">Histórico</h1>

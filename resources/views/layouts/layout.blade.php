@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>@yield('title', 'Título Padrão')</title>
+    <title>@yield('title', 'Dashboard') - {{ config('app.name') }}</title>
         
     <!-- Meta -->
     <meta charset="utf-8">

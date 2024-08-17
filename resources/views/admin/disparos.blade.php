@@ -39,8 +39,8 @@
                                 <td>10</td>
                                 <td>5</td>
                                 <td>
-                                    <a href="#" class="btn btn-primary">Editar</a>
-                                    <a href="#" class="btn btn-danger">Excluir</a>
+                                <a href="#" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
 
@@ -55,8 +55,8 @@
                                 <td>220</td>
                                 <td>5</td>
                                 <td>
-                                    <a href="#" class="btn btn-primary">Editar</a>
-                                    <a href="#" class="btn btn-danger">Excluir</a>
+                                <a href="#" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                        

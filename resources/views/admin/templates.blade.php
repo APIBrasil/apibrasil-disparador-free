@@ -42,8 +42,9 @@
                                 <a href="#">Não tem arquivo</a>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-primary">Editar</a>
-                                <a href="#" class="btn btn-danger">Excluir</a>
+                                <a href="#" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
+                            </td>
                             </td>
                         </tr>
 
@@ -62,8 +63,8 @@
                                 <a href="#">Baixar arquivo</a>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-primary">Editar</a>
-                                <a href="#" class="btn btn-danger">Excluir</a>
+                                <a href="#" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
 
@@ -82,8 +83,8 @@
                                 <a href="#">Baixar arquivo</a>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-primary">Editar</a>
-                                <a href="#" class="btn btn-danger">Excluir</a>
+                                <a href="#" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
 
