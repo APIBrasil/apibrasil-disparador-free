@@ -9,22 +9,22 @@ Você irá precisar de uma conta com um plano ativo na plataforma APIBrasil para
 
 Esse é o roadmap planejado para a plataforma 
 
-| Status  | Tarefa                                      |
-| ------- | --------                                    |
+| Status  | Tarefa                                   |
+| ------- | --------                                 |
 | OK   |   Login                                     |   
-| OK   |   Importação de contatos csv              |   
+| OK   |   Importação de contatos csv                |   
 | OK   |   Importação de contatos grupos             |   
 | OK   |   Criar templates (texto/arquivos/imagens)  |   
 | OK   |   Editar templates                          |   
 | OK   |   Deletar templates                         |
 | OK   |   Criar dispositivo                         |   
 | OK   |   Editar dispositivo                        |   
-| Em andamento   |   Deletar dispositivo                       |   
-| Em andamento   |   Criar usuário                             |   
-| Em andamento   |   Editar usuário                            |   
-| Em andamento   |   Deletar usuário                           |   
-
--------------------------------
+| OK   |   Deletar dispositivo                       |
+| OK   |   Envia Texto, Imagens e arquivos           |
+| Em andamento   |   Criar usuário                   |   
+| Em andamento   |   Editar usuário                  |   
+| Em andamento   |   Deletar usuário                 |   
+-----------------------------------------------------
 
 ### Vincular usuário
 php artisan db:seed:createFirstUser --email="email_apibrasil@email.com" --senha="sua_senha_apibrasil"
