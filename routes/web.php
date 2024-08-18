@@ -37,6 +37,8 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
     Route::group(['prefix' => 'dispositivos'], function () {
         Route::get('/', [DispositivosController::class, 'index'])->name('dispositivos.index');
         Route::post('/store', [DispositivosController::class, 'store'])->name('dispositivos.store');
+        Route::get('/{id}/show', [DispositivosController::class, 'show'])->name('dispositivos.show');
+        Route::patch('/{id}/update', [DispositivosController::class, 'update'])->name('dispositivos.update');
     });
 
     Route::group(['prefix' => 'templates'], function () {
