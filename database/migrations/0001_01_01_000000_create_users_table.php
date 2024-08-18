@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
+            $table->longText('api_token')->nullable();
             $table->longText('bearer_token_api_brasil')->nullable();
 
             $table->rememberToken();

@@ -14,15 +14,25 @@ return new class extends Migration
         Schema::create('mensagens', function (Blueprint $table) {
             $table->id();
 
-            $table->string('number')->nullable();
-            $table->string('text')->nullable();
-            $table->string('status')->nullable();
-
             $table->unsignedBigInteger('template_id')->nullable();
             $table->foreign('template_id')->references('id')->on('templates');
+            
+            //contact_id
+            $table->unsignedBigInteger('contact_id')->nullable();
+            $table->foreign('contact_id')->references('id')->on('contatos');
+
+            $table->unsignedBigInteger('tag_id')->nullable();
+            $table->foreign('tag_id')->references('id')->on('tags');
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedBigInteger('disparo_id')->nullable();
+            $table->foreign('disparo_id')->references('id')->on('disparos');
+
+            $table->timestamp('send_at')->nullable();
+
+            $table->enum('status', ['pending', 'sent', 'error'])->default('pending');
 
             $table->timestamps();
         });
