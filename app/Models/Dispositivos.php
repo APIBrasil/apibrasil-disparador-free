@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Psr7\Request as RequestGuzzle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ class Dispositivos extends Model
         try {
             
             $client = new Client(['http_errors' => false, 'verify' => false]);	
-            $token = Cookie::get('token');
+            $token = Auth::user()->bearer_token_api_brasil;
 
             $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
                 'Content-Type' => 'application/json',
@@ -35,12 +36,12 @@ class Dispositivos extends Model
         }
     }
 
-    public static function offline()
+    public static function offline($id)
     {
         try {
             
             $client = new Client(['http_errors' => false, 'verify' => false]);	
-            $token = Cookie::get('token');
+            $token = User::find($id)->bearer_token_api_brasil;
 
             $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
                 'Content-Type' => 'application/json',
@@ -51,7 +52,7 @@ class Dispositivos extends Model
             $response = json_decode($res->getBody()->getContents());
 
             $response = array_filter($response, function($dispositivo) {
-                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status != 'connected' or $dispositivo->status != 'open');
+                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status != 'connected' or $dispositivo->status != 'open' or $dispositivo->status != 'inChat');
             });
 
             return $response;
@@ -61,12 +62,12 @@ class Dispositivos extends Model
         }
     }
 
-    public static function online()
+    public static function online($id)
     {
         try {
             
             $client = new Client(['http_errors' => false, 'verify' => false]);	
-            $token = Cookie::get('token');
+            $token = User::find($id)->bearer_token_api_brasil;
 
             $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
                 'Content-Type' => 'application/json',
@@ -77,7 +78,7 @@ class Dispositivos extends Model
             $response = json_decode($res->getBody()->getContents());
 
             $response = array_filter($response, function($dispositivo) {
-                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status == 'connected' or $dispositivo->status == 'open');
+                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status == 'connected' or $dispositivo->status == 'open' or $dispositivo->status == 'inChat');
             });
 
             return $response;
@@ -87,5 +88,9 @@ class Dispositivos extends Model
         }
     }
 
+    public static function getcookie($name)
+    {
+        return $_COOKIE[$name] ?? false;
+    }
 
 }

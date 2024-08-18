@@ -16,5 +16,10 @@ class Tags extends Model
         'status',
         'user_id',
     ];
+
+    public function contatos()
+    {
+        return $this->hasMany(Contatos::class, 'tag_id', 'id');
+    }
     
 }

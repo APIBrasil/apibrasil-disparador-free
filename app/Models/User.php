@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'api_token',
+        'bearer_token_api_brasil'
     ];
 
     /**
