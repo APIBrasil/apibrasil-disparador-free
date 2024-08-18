@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckAuthMiddleware
@@ -12,10 +13,15 @@ class CheckAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        $token_cookie = $this->getcookie('token');
+        //if user is logged in
+        if(!Auth::check()) {
+            return redirect('login')->with('error', 'Você precisa estar logado para acessar essa página.');
+        }
+
+        $token_cookie = Auth::user()->bearer_token_api_brasil;
 
         if(!$token_cookie) {
-            return redirect('login');
+            return redirect('login')->with('error', 'Seu token da APIBrasil expirou, faça login novamente.');
         }
 
         return $next($request);
