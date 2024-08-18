@@ -18,7 +18,7 @@ Esse é o roadmap planejado para a plataforma
 | OK   |   Editar templates                          |   
 | OK   |   Deletar templates                         |
 | OK   |   Criar dispositivo                         |   
-| Em andamento   |   Editar dispositivo                        |   
+| OK   |   Editar dispositivo                        |   
 | Em andamento   |   Deletar dispositivo                       |   
 | Em andamento   |   Criar usuário                             |   
 | Em andamento   |   Editar usuário                            |   
@@ -42,8 +42,8 @@ Uploads de contatos
 Novo de disparo
 ![Novo de disparo](screen-novo-disparos.png)
 
-Disparador
-![Disparador](screen-disparos.png)
+Disparando
+![Disparador](screen-disparando.png)
 
 Novo dispositivo
 ![Novo dispositivo](screen-novo-dispositivos.png)
