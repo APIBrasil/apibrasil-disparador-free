@@ -15,22 +15,22 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive" id="table">
+                    <table class="table table-striped table-hover mb-0 table-responsive" id="table">
 
                         <thead>
                         <tr>
                             <th scope="col">Device</th>
                             <th scope="col">Device Token</th>
-                            <th scope="col">Tipo</th>
                             <th scope="col">API</th>
-                            <th scope="col">Status</th>
                             <th scope="col">Cadastrado</th>
-                            <th scope="col">Ações</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         @foreach($dispositivos as $item)
+
                         <tr>
 
                             <th scope="row">
@@ -40,9 +40,11 @@
                                 {{ $item->device_token }}
                             </td>
                             <td>
-                                <span class="badge bg-secondary">{{ $item->type }}</span>
-                            <td>
                                 {{ $item->service->name }}
+                            </td>
+                            <td>
+                                {{ Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                            </td>
                             <td>
 
                                 @switch($item->status)
@@ -63,13 +65,7 @@
                                     @default
                                     <span class="badge bg-warning">{{ $item->status }}</span>
                                 @endswitch
-
-
                             </td>
-                            <td>
-                                {{ Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                            </td>
-
                             <td>
                                 <a href="#" class="btn btn-sm btn-primary text-white" onclick="getItems('{{ $item->search }}')"><i class="fas fa-edit"></i></a>
                                 
@@ -78,11 +74,13 @@
                                     @case('close')
                                     @case('browserClose')
                                     @case('refused')
-                                    <a href="#" class="btn btn-sm btn-primary text-white"><i class="fas fa-qrcode"></i></a>
+                                    @case('notLogged')
+                                    @case('autocloseCalled')
+                                    <a href="#" class="btn btn-sm btn-info text-white" onclick="startDevice('{{ $item->device_token }}')"><i class="fas fa-qrcode"></i></a>
                                     @break
                                 @endswitch
 
-                                <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem('{{ $item->search }}')"><i class="fas fa-trash"></i></a>
                         </tr>
                         @endforeach
                         
@@ -156,13 +154,139 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalQR" tabindex="-1" aria-labelledby="modalQRLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <form class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalQRLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+
+                    <div class="text-center">
+                        <img src="https://loja.maxineo.com.br/wp-content/uploads/2017/10/loading.gif" alt="" class="w-50">
+                    </div>
+
+                    <p id="message" class="text-center">Aguarde...</p>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
     @section('scripts')
 
     <script>
 
+        let token = document.querySelector('meta[name="bearer_token_api_brasil"]').getAttribute('content');
+        let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        let profile_id = document.querySelector('meta[name="profile_id"]').getAttribute('content');
+
         let table = new DataTable('#table', {
             responsive: true
         });
+
+        const startDevice = (device_token) => {
+            
+            const socket = io('https://socket.apibrasil.com.br', {
+                query: {
+                    channelName: profile_id, 
+                    bearer: token
+                }
+            });
+
+            socket.on('connect', () => {
+                console.log(`O cliente ${socket.id} se conectou!`);
+            });
+
+            socket.on(`${device_token}`, (events) => {
+
+                // console.log(events);
+
+                if (events.message) {
+                    document.getElementById('message').innerHTML = events.message.message;
+                }
+
+                if (events.data.message) {
+                    document.getElementById('message').innerHTML = events.message.message;
+                }
+
+                if (events.data.wook == 'QRCODE') {
+
+                    let base64 = events.data.qrcode;
+                    let image = document.createElement('img');
+
+                    image.src = base64;
+                    image.className = 'w-50';
+
+                    document.querySelector('#modalQR .modal-body').innerHTML = '';
+                    document.querySelector('#modalQR .modal-body').appendChild(image);
+                }
+
+                if (events.data.status == 'inChat') {
+
+                    Swal.fire({
+                        title: 'Sucesso!',
+                        text: 'Dispositivo conectado com sucesso!',
+                        icon: 'success',
+                        confirmButtonText: 'Fechar',
+                    });
+
+                    const myModalQR = bootstrap.Modal.getInstance(document.getElementById('modalQR'));
+                    myModalQR.hide();
+
+                    window.location.reload();
+
+                }
+
+            });
+
+            const myModalQR = new bootstrap.Modal('#modalQR', {
+                keyboard: false,
+                backdrop: 'static'
+            });
+
+            document.getElementById('modalQRLabel').innerHTML = `Obtendo QR Code ...`;
+            myModalQR.show();
+
+            fetch(`/dispositivos/${device_token}/start`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ _token: _token })
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.error == true) {
+
+                    Swal.fire({
+                        title: 'Erro!',
+                        text: 'Erro ao iniciar dispositivo!',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                    });
+
+                    myModalQR.hide();
+
+                }
+
+            })
+            .catch((error) => {
+                
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Erro ao iniciar dispositivo!',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                });
+
+                console.error('Error:', error);
+                
+            });
+
+        }
 
         const createItem = () => {
 
@@ -267,8 +391,8 @@
                 });
 
                 document.querySelector('#modalItem .modal-footer button').removeAttribute('disabled');
-
                 console.error('Error:', error);
+
             });
 
         }
@@ -294,7 +418,6 @@
                 document.getElementById('secretkey').value = data.service.search;
 
                 myModalAlternative.show();
-
                 document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `updateItem('${id}')`);
                 
                 console.log(data);
@@ -357,6 +480,37 @@
 
                 console.error('Error:', error);
                 
+            });
+
+        }
+
+        const deleteItem = async (id) => {
+
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const bodyData = JSON.stringify({
+                _token: _token
+            });
+
+            fetch(`/dispositivos/${id}/destroy`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+                
+                if (data.error != 'true') {
+                    location.reload();
+                }
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
 
         }

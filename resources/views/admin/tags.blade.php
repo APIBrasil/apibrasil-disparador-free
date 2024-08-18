@@ -18,7 +18,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive table-responsive-large" id="example1">
+                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive" id="table">
                         <thead>
                         <tr>
                             <th scope="col">#ID</th>
@@ -26,7 +26,7 @@
                             <th scope="col">Descrição</th>
                             <th scope="col">Contatos</th>
                             <th scope="col">Cor</th>
-                            <th scope="col">Ações</th>
+                            <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
                         <tbody>

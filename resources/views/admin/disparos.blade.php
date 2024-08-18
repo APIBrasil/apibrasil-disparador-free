@@ -15,7 +15,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive table-responsive-large" id="table">
+                    <table class="table table-striped table-hover mb-0 table-responsive" id="table">
                         <thead>
                         <tr>
                             <th scope="col">Nome</th>
@@ -25,7 +25,7 @@
                             <th scope="col">Pendentes</th>
                             <th scope="col">Enviadas</th>
                             <th scope="col">Modo</th>
-                            <th scope="col">Ações</th>
+                            <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -136,29 +136,39 @@
 
         const getItems = (id) => {
 
+            const myModalAlternative = new bootstrap.Modal('#modalItem', {
+                keyboard: false,
+                backdrop: 'static'
+            });
+
+            myModalAlternative.show();
+
             fetch(`/disparos/${id}/show`)
             .then(response => response.json())
             .then(data => {
                 
-                const myModalAlternative = new bootstrap.Modal('#modalItem', {
-                    keyboard: false,
-                    backdrop: 'static'
-                });
-
                 document.getElementById('modalItemLabel').innerHTML = `Editar item ${data.name}`;
 
                 document.getElementById('name').value = data.name;
                 document.getElementById('description').value = data.description;
                 document.getElementById('tag_id').value = data.tag_id;
-                document.getElementById('templates_id').value = data.templates_id;
+
+                var selectElement = document.getElementById('templates_id');
+                for (var i = 0; i < selectElement.options.length; i++) {
+                    selectElement.options[i].selected = false;
+                }
+                
+                templates_id = data.templates_id.split(',');
+
+                for (var i = 0; i < templates_id.length; i++) {
+                    document.getElementById('templates_id').querySelector(`option[value="${templates_id[i]}"]`).selected = true;
+                }
+
                 document.getElementById('status').value = data.status;
                 document.getElementById('mode').value = data.mode;
 
-                myModalAlternative.show();
-
                 document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `updateItem(${id})`);
-                
-                console.log(data);
+
             });
 
         }
@@ -191,7 +201,6 @@
 
             document.querySelector('#modalItem .modal-footer button').setAttribute('disabled', 'disabled');
   
-            // Array para armazenar os valores selecionados
             var selectedValues = [];
 
             // Iterando sobre as opções e verificando as selecionadas

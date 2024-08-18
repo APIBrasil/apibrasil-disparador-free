@@ -38,13 +38,13 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive table-responsive-large" id="table">
+                    <table class="table table-striped table-hover mb-0 table-responsive" id="table">
                         <thead>
                         <tr>
                             <th scope="col">Nome</th>
                             <th scope="col">Número</th>
                             <th scope="col">Tag</th>
-                            <th scope="col">Ações</th>
+                            <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -331,32 +331,32 @@
 
         const deleteItem = async (id) => {
 
-        let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        const bodyData = JSON.stringify({
-            _token: _token
-        });
+            const bodyData = JSON.stringify({
+                _token: _token
+            });
 
-        fetch(`/contatos/${id}/destroy`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: bodyData
-        })
+            fetch(`/contatos/${id}/destroy`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
 
-        .then(response => response.json())
+            .then(response => response.json())
 
-        .then(data => {
-            
-            if (data.error != 'true') {
-                location.reload();
-            }
+            .then(data => {
+                
+                if (data.error != 'true') {
+                    location.reload();
+                }
 
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
 
         }
 
