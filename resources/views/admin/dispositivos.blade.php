@@ -50,8 +50,9 @@
                                     @case('inChat')
                                     <span class="badge bg-success">{{ $item->status }}</span>
                                     @break
+                                    @case('DISCONNECTED')
                                     @case('close')
-                                    <span class="badge bg-danger">closed</span>
+                                    <span class="badge bg-danger">{{ $item->status }}</span>
                                     @break
                                     @case('browserClose')
                                     <span class="badge bg-danger">browserClose</span>
@@ -71,7 +72,16 @@
 
                             <td>
                                 <a href="#" class="btn btn-sm btn-primary text-white" onclick="getItems('{{ $item->search }}')"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-primary text-white"><i class="fas fa-qrcode"></i></a>
+                                
+                                @switch($item->status)
+                                    @case('DISCONNECTED')
+                                    @case('close')
+                                    @case('browserClose')
+                                    @case('refused')
+                                    <a href="#" class="btn btn-sm btn-primary text-white"><i class="fas fa-qrcode"></i></a>
+                                    @break
+                                @endswitch
+
                                 <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                         </tr>
                         @endforeach

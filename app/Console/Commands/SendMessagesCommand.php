@@ -77,6 +77,7 @@ class SendMessagesCommand extends Command
 
                 if ($qt_disparo >= $random) {
                     echo "Limit of {$random} messages reached, waiting {$sleep} seconds\n";
+                    $qt_disparo = 0;
                     sleep($sleep);
                 }
 

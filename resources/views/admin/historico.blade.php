@@ -3,10 +3,69 @@
 @section('title', 'Histórico')
 
 @section('content')
-    <h1 class="app-page-title">Histórico</h1>
+    {{-- <h1 class="app-page-title">Histórico</h1> --}}
 
     <div class="row g-4 mb-4">
         <div class="col-12 col-lg-12">
+
+            <div class="row">
+
+                <div class="col-6 col-lg-3">
+                    <div class="app-card app-card-stat shadow-sm h-100">
+                        <div class="app-card-body p-3 p-lg-4">
+                            <h4 class="stats-type mb-1">Mensagens</h4>
+                            <div class="stats-figure">{{ isset($mensagens) ? count($mensagens) : 0 }}</div>
+                            <div class="stats-meta text-success">
+                                <i class="fas fa-calculator"></i> Total
+                            </div>
+                        </div>
+                        <a class="app-card-link-mask" href="#"></a>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-lg-3">
+                    <div class="app-card app-card-stat shadow-sm h-100">
+                        <div class="app-card-body p-3 p-lg-4">
+                            <h4 class="stats-type mb-1">Contatos</h4>
+                            <div class="stats-figure">{{ isset($mensagensEnviadas) ? count($mensagensEnviadas) : 0 }}</div>
+                            <div class="stats-meta text-success">
+                                <i class="fas fa-arrow-up"></i> Enviadas
+                            </div>
+                            </div>
+                        <a class="app-card-link-mask" href="#"></a>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-lg-3">
+                    <div class="app-card app-card-stat shadow-sm h-100">
+                        <div class="app-card-body p-3 p-lg-4">
+                            <h4 class="stats-type mb-1">Mensagens</h4>
+                            <div class="stats-figure">{{ isset($messagensError) ? count($messagensError) : 0 }}</div>
+                            <div class="stats-meta text-danger">
+                                <i class="fas fa-times"></i> Erros
+                            </div>
+                        </div>
+                        <a class="app-card-link-mask" href="#"></a>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-lg-3">
+                    <div class="app-card app-card-stat shadow-sm h-100">
+                        <div class="app-card-body p-3 p-lg-4">
+                            <h4 class="stats-type mb-1">Dispositivos</h4>
+                            <div class="stats-figure">{{ isset($dispositivos) ? count($dispositivos) : 0 }}</div>
+                            <div class="stats-meta text-success">
+                                <i class="fas fa-arrow-up"></i> Total
+                            </div>
+                        </div>
+                        <a class="app-card-link-mask" href="#"></a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-12 col-lg-12">
+
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 

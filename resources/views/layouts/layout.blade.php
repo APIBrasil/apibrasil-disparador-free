@@ -14,6 +14,7 @@
 
     <!-- meta csrf -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="bearer_token_api_brasil" content="{{ Auth::user()->bearer_token_api_brasil }}">
     
     <!-- FontAwesome JS-->
     <script defer src="/assets/plugins/fontawesome/js/all.min.js"></script>

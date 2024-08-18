@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\API;
 use ApiBrasil\Service;
-use GuzzleHttp\Client;
 
 use App\Models\Servidores;
 use App\Models\Dispositivos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Psr7\Request as RequestGuzzle;
 
 class DispositivosController extends Controller
 {
@@ -44,30 +42,21 @@ class DispositivosController extends Controller
     {
         try {
             
-            $client = new Client(['verify' => false]);
-
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $headers = [
-                'Content-Type' => 'application/json',
-                'SecretKey' => $request->secretkey,
-                'Authorization' => "Bearer $token"
-            ];
-
-            $body = json_encode([
-                'type' => 'cellphone',
-                'device_name' => $request->device_name,
-                'device_key' => $request->device_key,
-                'device_ip' => $request->device_ip,
-                'server_search' => $request->server_search
-            ]); 
-
-            $request = new RequestGuzzle('POST', env("API_URL").'/v2/devices/store', $headers, $body);
-            $res = $client->sendAsync($request)->wait();
-
-            $response = json_decode($res->getBody()->getContents());
-
-            return response()->json($response);
+            $store = Service::Device("store", [
+                "Bearer" => $token,
+                "SecretKey" => $request->secretkey,
+                "body" => [
+                    'type' => $request->type,
+                    'device_name' => $request->device_name,
+                    'device_key' => $request->device_key,
+                    'device_ip' => $request->device_ip,
+                    'server_search' => $request->server_search
+                ]
+            ]);
+            
+            return response()->json($store);
 
         } catch (\GuzzleHttp\Exception\RequestException $e) {
 
@@ -113,33 +102,21 @@ class DispositivosController extends Controller
     {
         try {
             
-            $client = new Client(['verify' => false]);
-
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $headers = [
-                'Content-Type' => 'application/json',
-                'SecretKey' => $request->secretkey,
-                'Authorization' => "Bearer $token"
-            ];
-
-            $body = json_encode([
-                'search' => $id,
-                'server_search' => $request->server_search,
-                'type' => 'cellphone',
-
-                'device_name' => $request->device_name,
-                'device_key' => $request->device_key,
-                'device_ip' => $request->device_ip
-
-            ]); 
-
-            $request = new RequestGuzzle('POST', env("API_URL").'/v2/devices/search', $headers, $body);
-            $res = $client->sendAsync($request)->wait();
-
-            $response = json_decode($res->getBody()->getContents());
-
-            return response()->json($response);
+            $update  = Service::Device("store", [
+                "Bearer" => $token,
+                "SecretKey" => $request->secretkey,
+                "body" => [
+                    'type' => $request->type,
+                    'device_name' => $request->device_name,
+                    'device_key' => $request->device_key,
+                    'device_ip' => $request->device_ip,
+                    'server_search' => $request->server_search
+                ]
+            ]);
+            
+            return response()->json($update);
 
         } catch (\GuzzleHttp\Exception\RequestException $e) {
 
