@@ -11,13 +11,13 @@ Esse é o roadmap planejado para a plataforma
 
 | Status  | Tarefa                                      |
 | ------- | --------                                    |
-| Em andamento   |   Login                                     |   
-| Em andamento   |   Importação de contatos excel              |   
-| Em andamento   |   Importação de contatos grupos             |   
-| Em andamento   |   Criar templates (texto/arquivos/imagens)  |   
-| Em andamento   |   Editar templates                          |   
-| Em andamento   |   Deletar templates                         |
-| Em andamento   |   Criar dispositivo                         |   
+| OK   |   Login                                     |   
+| OK   |   Importação de contatos csv              |   
+| OK   |   Importação de contatos grupos             |   
+| OK   |   Criar templates (texto/arquivos/imagens)  |   
+| OK   |   Editar templates                          |   
+| OK   |   Deletar templates                         |
+| OK   |   Criar dispositivo                         |   
 | Em andamento   |   Editar dispositivo                        |   
 | Em andamento   |   Deletar dispositivo                       |   
 | Em andamento   |   Criar usuário                             |   
