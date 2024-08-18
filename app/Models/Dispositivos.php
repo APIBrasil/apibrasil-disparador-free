@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use ApiBrasil\Service;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Psr7\Request as RequestGuzzle;
@@ -30,6 +31,27 @@ class Dispositivos extends Model
             $response = json_decode($res->getBody()->getContents());
 
             return $response;
+
+        } catch (\GuzzleHttp\Exception\GuzzleException $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public static function show($id)
+    {
+        try {
+            
+            $token = Auth::user()->bearer_token_api_brasil;
+
+            $show = Service::Device("show", [
+                "Bearer" => $token,
+                "method" => "GET",
+                "body" => [
+                    "search" => $id
+                ]
+            ]);
+
+            return $show;
 
         } catch (\GuzzleHttp\Exception\GuzzleException $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -86,11 +108,6 @@ class Dispositivos extends Model
         } catch (\GuzzleHttp\Exception\GuzzleException $th) {
             return response()->json(['error' => $th->getMessage()]);
         }
-    }
-
-    public static function getcookie($name)
-    {
-        return $_COOKIE[$name] ?? false;
     }
 
 }

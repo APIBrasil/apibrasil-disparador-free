@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
 
             $table->longText('api_token')->nullable();
+            $table->string('profile_id')->nullable();
             $table->longText('bearer_token_api_brasil')->nullable();
 
             $table->rememberToken();

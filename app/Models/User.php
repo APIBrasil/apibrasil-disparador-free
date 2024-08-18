@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'api_token',
+        'profile_id',
         'bearer_token_api_brasil'
     ];
 
