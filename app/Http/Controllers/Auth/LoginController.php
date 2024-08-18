@@ -35,7 +35,7 @@ class LoginController extends Controller
 
                 $client = new Client(['http_errors' => false, 'verify' => false]);
     
-                $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/login', [
+                $request = new RequestGuzzle('POST', env("API_URL").'/v2/login', [
                     'Content-Type' => 'application/json'
                 ], json_encode($credentials));
         
@@ -74,7 +74,7 @@ class LoginController extends Controller
         $token = Cookie::get('token');
         $client = new Client(['http_errors' => false, 'verify' => false]);
 
-        $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/logout', [
+        $request = new RequestGuzzle('POST', env("API_URL").'/v2/logout', [
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $token
         ]);

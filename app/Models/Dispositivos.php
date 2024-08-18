@@ -21,7 +21,7 @@ class Dispositivos extends Model
             $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
+            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
             ]);
@@ -43,7 +43,7 @@ class Dispositivos extends Model
             $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = User::find($id)->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
+            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
             ]);
@@ -69,7 +69,7 @@ class Dispositivos extends Model
             $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = User::find($id)->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/devices', [
+            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
             ]);

@@ -20,7 +20,7 @@ class API extends Model
             $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', 'https://gateway.apibrasil.io/api/v2/apis', [
+            $request = new RequestGuzzle('GET', env("API_URL").'/v2/apis', [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
             ]);

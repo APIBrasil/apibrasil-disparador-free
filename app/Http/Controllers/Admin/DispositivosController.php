@@ -62,7 +62,7 @@ class DispositivosController extends Controller
                 'server_search' => $request->server_search
             ]); 
 
-            $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/devices/store', $headers, $body);
+            $request = new RequestGuzzle('POST', env("API_URL").'/v2/devices/store', $headers, $body);
             $res = $client->sendAsync($request)->wait();
 
             $response = json_decode($res->getBody()->getContents());
@@ -134,7 +134,7 @@ class DispositivosController extends Controller
 
             ]); 
 
-            $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/devices/search', $headers, $body);
+            $request = new RequestGuzzle('POST', env("API_URL").'/v2/devices/search', $headers, $body);
             $res = $client->sendAsync($request)->wait();
 
             $response = json_decode($res->getBody()->getContents());
