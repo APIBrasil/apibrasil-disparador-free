@@ -80,19 +80,75 @@ class SendMessagesCommand extends Command
                     sleep($sleep);
                 }
 
-                $sendText = Service::WhatsApp("sendText", [
-                    "Bearer" => $token,
-                    "DeviceToken" => $random_device->device_token,
-                    "body" => [
-                        "number" => $message->contato->number,
-                        "text" => $message->template->text
-                    ]
-                ]);
+                if($message->template->type == 'text') {
+                    $sendText = Service::WhatsApp("sendText", [
+                        "Bearer" => $token,
+                        "DeviceToken" => $random_device->device_token,
+                        "body" => [
+                            "number" => $message->contato->number,
+                            "text" => $message->template->text
+                        ]
+                    ]);
+    
+                    if (!$sendText or $sendText->response->result != 200) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
+                }
 
-                if (!$sendText or $sendText->response->result != 200) {
-                    $message->status = 'error';
-                    $message->save();
-                    continue;
+                if($message->template->type == 'image') {
+
+                    $sendFile = Service::WhatsApp("sendImage", [
+                        "Bearer" => $token,
+                        "DeviceToken" => $random_device->device_token,
+                        "body" => [
+                            "number" => $message->contato->number,
+                            "path" => $message->template->path,
+                            "caption" => $message->template->text
+                        ]
+                    ]);
+
+                    if (!$sendFile or $sendFile->response->result != 200) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
+
+                }
+
+                if($message->template->type == 'file') {
+
+                    $sendFile = Service::WhatsApp("sendFile", [
+                        "Bearer" => $token,
+                        "DeviceToken" => $random_device->device_token,
+                        "body" => [
+                            "number" => $message->contato->number,
+                            "path" => $message->template->path,
+                        ]
+                    ]);
+
+                    if($message->template->text){
+
+                        sleep(3);
+
+                        $sendText = Service::WhatsApp("sendText", [
+                            "Bearer" => $token,
+                            "DeviceToken" => $random_device->device_token,
+                            "body" => [
+                                "number" => $message->contato->number,
+                                "text" => $message->template->text
+                            ]
+                        ]);
+
+                    }
+
+                    if (!$sendFile or $sendFile->response->result != 200) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
+
                 }
 
                 $qt_disparo++;
@@ -100,7 +156,6 @@ class SendMessagesCommand extends Command
                 $message->status = 'sent';
                 $message->send_at = now();
                 $message->save();
-                
 
             }
 
