@@ -27,6 +27,11 @@ class HistoricoController extends Controller
         ->where('status', 'sent')
         ->get();
 
+        $mensagensPendentes = Mensagens::orderBy('id', 'desc')
+        ->where('user_id', Auth::id())
+        ->where('status', 'pending')
+        ->get();
+
         $messagensError = Mensagens::orderBy('id', 'desc')
         ->where('user_id', Auth::id())
         ->where('status', 'error')
@@ -36,6 +41,7 @@ class HistoricoController extends Controller
         ->with('dispositivos', $dispositivos)
         ->with('mensagens', $mensagens)
         ->with('mensagensEnviadas', $mensagensEnviadas)
+        ->with('mensagensPendentes', $mensagensPendentes)
         ->with('messagensError', $messagensError);
     }
 

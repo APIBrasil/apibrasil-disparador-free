@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Models\API;
 use ApiBrasil\Service;
 
+use GuzzleHttp\Client;
 use App\Models\Servidores;
 use App\Models\Dispositivos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Psr7\Request as RequestGuzzle;
 
 class DispositivosController extends Controller
 {
@@ -36,6 +38,32 @@ class DispositivosController extends Controller
         ->with('servidores', $servidores)
         ->with('apis', $apis)
         ->with('dispositivos', $dispositivos);
+    }
+
+    public function start(string $device_token)
+    {
+        try {
+            
+            $token = Auth::user()->bearer_token_api_brasil;
+
+            $start = Service::WhatsApp("start", [
+                "Bearer" => $token,
+                "method" => "GET",
+                "DeviceToken" => $device_token
+            ]);
+            
+            return response()->json($start);
+
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+
+            $errorAsString = $e->getResponse()->getBody()->getContents();
+
+            return response()->json([
+                'error' => true,
+                'message' => json_decode($errorAsString)
+            ], 400);
+
+        }
     }
 
     public function store(Request $request)
@@ -133,8 +161,24 @@ class DispositivosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $search)
     {
-        //
+        try {
+            
+            $token = Auth::user()->bearer_token_api_brasil;
+
+            $delete  = Service::Device("destroy", [
+                "Bearer" => $token,
+                "method" => "DELETE",
+                "body" => [
+                    'search' => $search
+                ]
+            ]);
+
+            return $delete;
+
+        } catch (\GuzzleHttp\Exception\GuzzleException $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
     }
 }

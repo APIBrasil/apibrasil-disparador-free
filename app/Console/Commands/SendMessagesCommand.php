@@ -34,6 +34,8 @@ class SendMessagesCommand extends Command
         foreach ($disparos as $disparos) {
 
             $user = User::find($disparos->user_id);
+
+            // dd($user->bearer_token_api_brasil);
             $token = $user->bearer_token_api_brasil;
             $devices_online = Dispositivos::online($user->id);
 

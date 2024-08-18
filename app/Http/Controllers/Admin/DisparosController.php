@@ -90,7 +90,8 @@ class DisparosController extends Controller
 
             $disparo = Disparos::find($id);
 
-            $disparo->templates_id = $request->templates_id;
+            $disparo->templates_id = implode(',', $request->templates_id);
+
             $disparo->name = $request->name;
             $disparo->description = $request->description;
             $disparo->tag_id = $request->tag_id;

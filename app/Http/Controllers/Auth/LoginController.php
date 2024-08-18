@@ -50,6 +50,7 @@ class LoginController extends Controller
 
                 $user = User::find(Auth::id());
                 $user->bearer_token_api_brasil = $token;
+                $user->profile_id = $response->user->search;
 
                 $user->save();
     
@@ -88,6 +89,7 @@ class LoginController extends Controller
 
         $user = User::find(Auth::id());
         $user->bearer_token_api_brasil = null;
+        $user->profile_id = null;
         $user->save();
 
         Auth::logout();
