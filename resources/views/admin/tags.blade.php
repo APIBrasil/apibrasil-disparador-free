@@ -21,8 +21,10 @@
                     <table class="table table-striped table-hover mb-0 text-nowrap table-responsive table-responsive-large" id="example1">
                         <thead>
                         <tr>
+                            <th scope="col">#ID</th>
                             <th scope="col">Nome</th>
                             <th scope="col">Descrição</th>
+                            <th scope="col">Contatos</th>
                             <th scope="col">Cor</th>
                             <th scope="col">Ações</th>
                         </tr>
@@ -31,10 +33,16 @@
                         @foreach ($tags as $tag)
                         <tr>
                             <th scope="row">
+                                {{ $tag->id }}
+                            </th>
+                            <th scope="row">
                                 <a href="#" onclick="getItems({{ $tag->id }})">{{ $tag->name }}</a>
                             </th>
                             <td>
                                 {{ $tag->description }}
+                            </td>
+                            <td>
+                                {{ $tag->contatos ? count($tag->contatos) : 0 }}
                             </td>
                             <td>
                                 <span class="badge" style="background: {{ $tag->color }}">{{ $tag->color }}</span>
@@ -170,11 +178,22 @@
         .then(response => response.json())
         .then(data => {
             
-            if (data.error != 'true') {
+            if (data.error == true) {
+
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Erro ao salvar item!',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                });
+
+            } else {
+
                 const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
                 myModal.hide();
 
                 location.reload();
+
             }
 
         })
@@ -208,11 +227,22 @@
 
         .then(data => {
             
-            if (data.error != 'true') {
+            if (data.error == true) {
+
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Erro ao salvar item!',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                });
+
+            } else {
+
                 const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
                 myModal.hide();
 
                 location.reload();
+
             }
 
         })

@@ -8,7 +8,7 @@
     <div class="app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration" role="alert">
         <div class="inner">
             <div class="app-card-body">
-                <h4>Welcome, {{ $user->first_name }}!</h4>
+                <h4>Welcome, {{ $user->name }}!</h4>
                 @if (session('success'))
                     {{ session('success') }}
                 @endif
@@ -22,7 +22,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
                     <h4 class="stats-type mb-1">Mensagens</h4>
-                    <div class="stats-figure">12.628</div>
+                    <div class="stats-figure">{{ isset($mensagens) ? $mensagens : 0 }}</div>
                     <div class="stats-meta text-success">
                         <i class="fas fa-arrow-up"></i> Enviadas
                     </div>
@@ -35,7 +35,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
                     <h4 class="stats-type mb-1">Contatos</h4>
-                    <div class="stats-figure">2306</div>
+                    <div class="stats-figure">{{ isset($contatos) ? $contatos : 0 }}</div>
                     <div class="stats-meta text-success">
                         <i class="fas fa-user-plus"></i> Novos
                     </div>

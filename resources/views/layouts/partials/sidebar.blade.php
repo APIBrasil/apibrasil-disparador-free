@@ -31,7 +31,7 @@
                         <span class="nav-icon">
                             <i class="fas fa-users fa-lg"></i>
                         </span>
-                         <span class="nav-link-text">Contatos</span>
+                         <span class="nav-link-text">Tags/Contatos</span>
                     </a>
                 </li>
 
@@ -82,7 +82,7 @@
                    
                     <li class="nav-item">
                         
-                        <a class="nav-link" href="/configuracoes">
+                        <a class="nav-link" href="#">
                             <span class="nav-icon">
                                 <i class="fas fa-cog fa-lg"></i>
                             </span>
@@ -92,7 +92,7 @@
 
                     <li class="nav-item">
                         
-                        <a class="nav-link" href="https://themes.3rdwavemedia.com/bootstrap-templates/admin-dashboard/portal-free-bootstrap-admin-dashboard-template-for-developers/">
+                        <a class="nav-link" href="#">
                             <span class="nav-icon">
                                <i class="fas fa-book fa-lg"></i>
                             </span>

@@ -18,7 +18,7 @@
     <!-- FontAwesome JS-->
     <script defer src="/assets/plugins/fontawesome/js/all.min.js"></script>
     
-    <!-- App CSS -->  
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css" />
     <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
     
 </head>

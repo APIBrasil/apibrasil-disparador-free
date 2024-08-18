@@ -15,7 +15,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table">
+                    <table class="table table-striped table-hover mb-0 text-nowrap table-responsive table-responsive-large" id="table">
                         <thead>
                         <tr>
                             <th scope="col">Nome</th>
@@ -129,169 +129,173 @@
     </div>
 
     @section('scripts')
-        
-        <script>
 
-            const getItems = (id) => {
+    <script>
 
-                fetch(`/templates/${id}/show`)
-                .then(response => response.json())
-                .then(data => {
-                    
-                    const myModalAlternative = new bootstrap.Modal('#modalItem', {
-                        keyboard: false,
-                        backdrop: 'static'
-                    });
+        let table = new DataTable('#table', {
+            responsive: true
+        });
 
-                    document.getElementById('modalItemLabel').innerHTML = `Editar item ${data.name}`;
+        const getItems = (id) => {
 
-                    document.getElementById('name').value = data.name;
-                    document.getElementById('description').value = data.description;
-                    document.getElementById('type').value = data.type;
-                    document.getElementById('text').value = data.text;
-                    document.getElementById('status').value = data.status;
-                    document.getElementById('path').value = data.path;
-
-                    myModalAlternative.show();
-
-                    document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `updateItem(${id})`);
-                    
-                    console.log(data);
-                });
-
-            }
-
-            const createItem = () => {
-
-                document.getElementById('name').value = '';
-                document.getElementById('description').value = '';
-                document.getElementById('type').value = 'text';
-                document.getElementById('text').value = '';
-                document.getElementById('path').value = '';
-                document.getElementById('status').value = 'active';
-
-                const myModal = new bootstrap.Modal('#modalItem', {
+            fetch(`/templates/${id}/show`)
+            .then(response => response.json())
+            .then(data => {
+                
+                const myModalAlternative = new bootstrap.Modal('#modalItem', {
                     keyboard: false,
                     backdrop: 'static'
                 });
 
-                document.getElementById('modalItemLabel').innerHTML = 'Adicionar item';
-                document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `saveItem()`);
+                document.getElementById('modalItemLabel').innerHTML = `Editar item ${data.name}`;
 
-                myModal.show();
+                document.getElementById('name').value = data.name;
+                document.getElementById('description').value = data.description;
+                document.getElementById('type').value = data.type;
+                document.getElementById('text').value = data.text;
+                document.getElementById('status').value = data.status;
+                document.getElementById('path').value = data.path;
 
-            }
-            
-            const saveItem = async () => {
+                myModalAlternative.show();
 
-                let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `updateItem(${id})`);
+                
+                console.log(data);
+            });
 
-                const bodyData = JSON.stringify({
-                    _token: _token,
-                    name: document.getElementById('name').value,
-                    description: document.getElementById('description').value,
-                    type: document.getElementById('type').value,
-                    path: document.getElementById('path').value,
-                    status: document.getElementById('status').value,
-                    text: document.getElementById('text').value
-                });
+        }
 
-                fetch('/templates/store', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: bodyData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    
-                    if (data.error != 'true') {
-                        const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
-                        myModal.hide();
+        const createItem = () => {
 
-                        location.reload();
-                    }
+            document.getElementById('name').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('type').value = 'text';
+            document.getElementById('text').value = '';
+            document.getElementById('path').value = '';
+            document.getElementById('status').value = 'active';
 
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            const myModal = new bootstrap.Modal('#modalItem', {
+                keyboard: false,
+                backdrop: 'static'
+            });
 
-            }
+            document.getElementById('modalItemLabel').innerHTML = 'Adicionar item';
+            document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `saveItem()`);
 
-            const updateItem = async (id) => {
+            myModal.show();
 
-                let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+        
+        const saveItem = async () => {
 
-                const bodyData = JSON.stringify({
-                    _token: _token,
-                    name: document.getElementById('name').value,
-                    description: document.getElementById('description').value,
-                    type: document.getElementById('type').value,
-                    status: document.getElementById('status').value,
-                    path: document.getElementById('path').value,
-                    text: document.getElementById('text').value
-                });
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                fetch(`/templates/${id}/update`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: bodyData
-                })
+            const bodyData = JSON.stringify({
+                _token: _token,
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                type: document.getElementById('type').value,
+                path: document.getElementById('path').value,
+                status: document.getElementById('status').value,
+                text: document.getElementById('text').value
+            });
 
-                .then(response => response.json())
+            fetch('/templates/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.error != 'true') {
+                    const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
+                    myModal.hide();
 
-                .then(data => {
-                    
-                    if (data.error != 'true') {
-                        const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
-                        myModal.hide();
+                    location.reload();
+                }
 
-                        location.reload();
-                    }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
 
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+        }
 
-            }
+        const updateItem = async (id) => {
 
-            const deleteItem = async (id) => {
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const bodyData = JSON.stringify({
+                _token: _token,
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                type: document.getElementById('type').value,
+                status: document.getElementById('status').value,
+                path: document.getElementById('path').value,
+                text: document.getElementById('text').value
+            });
 
-                const bodyData = JSON.stringify({
-                    _token: _token
-                });
+            fetch(`/templates/${id}/update`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
 
-                fetch(`/templates/${id}/destroy`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: bodyData
-                })
+            .then(response => response.json())
 
-                .then(response => response.json())
+            .then(data => {
+                
+                if (data.error != 'true') {
+                    const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
+                    myModal.hide();
 
-                .then(data => {
-                    
-                    if (data.error != 'true') {
-                        location.reload();
-                    }
+                    location.reload();
+                }
 
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
 
-            }
+        }
 
-        </script>
+        const deleteItem = async (id) => {
+
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const bodyData = JSON.stringify({
+                _token: _token
+            });
+
+            fetch(`/templates/${id}/destroy`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+                
+                if (data.error != 'true') {
+                    location.reload();
+                }
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        }
+
+    </script>
 
     @endsection
 
