@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Tags;
 use App\Models\Disparos;
+use App\Models\Mensagens;
 use App\Models\Templates;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DisparosController extends Controller
 {
@@ -40,12 +42,31 @@ class DisparosController extends Controller
 
             $disparo = new Disparos();
 
-            $disparo->templates_id = $request->templates_id;
+            $disparo->templates_id = implode(',', $request->templates_id);
+            $disparo->name = $request->name;
+            $disparo->description = $request->description;
             $disparo->tag_id = $request->tag_id;
             $disparo->status = $request->status;
-            $disparo->send_at = $request->send_at;
+            $disparo->user_id = Auth::user()->id;
 
             $disparo->save();
+
+            $contatos = Tags::find($request->tag_id)->contatos;
+
+            foreach ($contatos as $contato) {
+
+                $template_random_id = $request->templates_id[array_rand($request->templates_id)];
+                
+                Mensagens::create([
+                    'contact_id' => $contato->id,
+                    'template_id' => $template_random_id,
+                    'tag_id' => $request->tag_id,
+                    'user_id' => Auth::user()->id,
+                    'disparo_id' => $disparo->id,
+                    'status' => 'pending',
+                ]);
+
+            }
 
             return response()->json([
                 'error' => false,
@@ -65,7 +86,9 @@ class DisparosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $disparo = Disparos::find($id);
+
+        return response()->json($disparo, 200);
     }
 
     /**
@@ -73,7 +96,29 @@ class DisparosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $disparo = Disparos::find($id);
+
+            $disparo->templates_id = $request->templates_id;
+            $disparo->name = $request->name;
+            $disparo->description = $request->description;
+            $disparo->tag_id = $request->tag_id;
+            $disparo->status = $request->status;
+
+            $disparo->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Disparo atualizado com sucesso.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -81,6 +126,22 @@ class DisparosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $disparo = Disparos::find($id);
+
+            $disparo->delete();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Disparo excluído com sucesso.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 }

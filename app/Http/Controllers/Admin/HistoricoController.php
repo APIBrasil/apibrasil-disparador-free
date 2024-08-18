@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Mensagens;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class HistoricoController extends Controller
 {
@@ -12,7 +13,10 @@ class HistoricoController extends Controller
      */
     public function index()
     {
-        //
+        $mensagens = Mensagens::orderBy('id', 'desc')->get();
+
+        return view('admin.historico')
+        ->with('mensagens', $mensagens);
     }
 
     /**

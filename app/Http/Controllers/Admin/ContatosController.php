@@ -6,6 +6,8 @@ use App\Models\Tags;
 use App\Models\Contatos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\UploadContactsJob;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ContatosController extends Controller
@@ -57,6 +59,7 @@ class ContatosController extends Controller
             $contato->name = $request->name;
             $contato->number = $request->number;
             $contato->tag_id = $request->tag_id;
+            $contato->user_id = Auth::user()->id;
 
             $contato->save();
 
@@ -79,9 +82,65 @@ class ContatosController extends Controller
     public function show(string $id)
     {
         try {
-            $contato = Contatos::find($id);
 
+            $contato = Contatos::find($id);
             return response()->json($contato);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+
+    //upload
+    public function upload(Request $request)
+    {
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'file' => 'required|mimes:csv,txt',
+            ], [
+                'file.required' => 'O campo arquivo é obrigatório.',
+                'file.mimes' => 'O arquivo deve ser do tipo csv ou txt.',
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $validation->errors()
+                ], 400);
+            }
+
+            $file = $request->file('file');
+            $path = $file->store('uploads');
+
+            $file = fopen(storage_path('app/' . $path), 'r');
+
+            while (($line = fgetcsv($file)) !== FALSE) {
+
+                //check number exists
+                $numbers = [];
+                $contato = Contatos::where('number', $line[1])->first();
+                if ($contato) {
+                    $numbers[] = $line[1];
+                }
+
+                $contato = new Contatos();
+                $contato->name = $line[0];
+                $contato->number = $line[1];
+                $contato->tag_id = $line[2];
+                $contato->user_id = Auth::user()->id;
+                $contato->save();
+            }
+
+            fclose($file);
+
+            //UploadContactsJob::dispatch(Auth::user()->id, $path);
+
+            return redirect()->route('contatos.index')->with('success', 'Contatos importados com sucesso, duplicados: ' . implode(', ', $numbers));
 
         } catch (\Exception $e) {
             return response()->json([
@@ -124,6 +183,7 @@ class ContatosController extends Controller
             $contato->name = $request->name;
             $contato->number = $request->number;
             $contato->tag_id = $request->tag_id;
+            $contato->user_id = Auth::user()->id;
 
             $contato->save();
 
