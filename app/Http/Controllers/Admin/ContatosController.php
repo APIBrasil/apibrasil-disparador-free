@@ -26,9 +26,6 @@ class ContatosController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -94,8 +91,6 @@ class ContatosController extends Controller
         }
     }
 
-
-    //upload
     public function upload(Request $request)
     {
         try {

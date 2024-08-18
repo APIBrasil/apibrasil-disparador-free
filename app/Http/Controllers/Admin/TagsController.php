@@ -6,6 +6,7 @@ use App\Models\Tags;
 use App\Models\Contatos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TagsController extends Controller
@@ -22,9 +23,6 @@ class TagsController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -55,6 +53,7 @@ class TagsController extends Controller
             $tag->name = $request->name;
             $tag->description = $request->description;
             $tag->color = $request->color;
+            $tag->user_id = Auth::id();
             $tag->status = $request->status;
             
             $tag->save();
@@ -72,9 +71,6 @@ class TagsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         try {
@@ -91,9 +87,6 @@ class TagsController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -124,6 +117,7 @@ class TagsController extends Controller
             $tag->name = $request->name;
             $tag->description = $request->description;
             $tag->color = $request->color;
+            $tag->user_id = Auth::id();
             $tag->status = $request->status;
             
             $tag->save();
@@ -140,10 +134,7 @@ class TagsController extends Controller
             ]);
         }   
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(string $id)
     {
         try {
