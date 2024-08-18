@@ -39,6 +39,8 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::post('/store', [DispositivosController::class, 'store'])->name('dispositivos.store');
         Route::get('/{id}/show', [DispositivosController::class, 'show'])->name('dispositivos.show');
         Route::patch('/{id}/update', [DispositivosController::class, 'update'])->name('dispositivos.update');
+        Route::post('/{device_token}/start', [DispositivosController::class, 'start'])->name('dispositivos.start');
+        Route::delete('/{search}/destroy', [DispositivosController::class, 'destroy'])->name('dispositivos.destroy');
     });
 
     Route::group(['prefix' => 'templates'], function () {
