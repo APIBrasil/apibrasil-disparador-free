@@ -70,6 +70,7 @@
                             </td>
 
                             <td>
+                                <a href="#" class="btn btn-sm btn-primary text-white" onclick="getItems('{{ $item->search }}')"><i class="fas fa-edit"></i></a>
                                 <a href="#" class="btn btn-sm btn-primary text-white"><i class="fas fa-qrcode"></i></a>
                                 <a href="#" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></a>
                         </tr>
@@ -258,6 +259,94 @@
                 document.querySelector('#modalItem .modal-footer button').removeAttribute('disabled');
 
                 console.error('Error:', error);
+            });
+
+        }
+
+        const getItems = (id) => {
+
+            fetch(`/dispositivos/${id}/show`)
+            .then(response => response.json())
+            .then(data => {
+                
+                const myModalAlternative = new bootstrap.Modal('#modalItem', {
+                    keyboard: false,
+                    backdrop: 'static'
+                });
+
+                document.getElementById('modalItemLabel').innerHTML = `Editar item ${data.name}`;
+
+                document.getElementById('type').value = data.type;
+                document.getElementById('server_search').value = data.server_search;
+                document.getElementById('device_name').value = data.device_name;
+                document.getElementById('device_key').value = data.device_key;
+                document.getElementById('device_ip').value = data.device_ip;
+                document.getElementById('secretkey').value = data.service.search;
+
+                myModalAlternative.show();
+
+                document.querySelector('#modalItem .modal-footer button').setAttribute('onclick', `updateItem('${id}')`);
+                
+                console.log(data);
+            });
+
+        }
+
+        const updateItem = async (id) => {
+
+            let _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const bodyData = JSON.stringify({
+                _token: _token,
+                device_name: document.getElementById('device_name').value,
+                device_key: document.getElementById('device_key').value,
+                device_ip: document.getElementById('device_ip').value,
+                type: document.getElementById('type').value,
+                server_search: document.getElementById('server_search').value,
+                secretkey: document.getElementById('secretkey').value,
+            });
+
+            fetch(`/dispositivos/${id}/update`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData
+            })
+
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.error == true) {
+
+                    Swal.fire({
+                        title: 'Erro!',
+                        text: 'Erro ao salvar item!',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                    });
+
+                } else {
+
+                    const myModal = bootstrap.Modal.getInstance(document.getElementById('modalItem'));
+                    myModal.hide();
+
+                    location.reload();
+
+                }
+
+            })
+            .catch((error) => {
+                
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Erro ao salvar item!',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                });
+
+                console.error('Error:', error);
+                
             });
 
         }

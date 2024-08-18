@@ -96,6 +96,7 @@
                         <label for="type" class="form-label">Tipo</label>
                         <select class="form-select" id="type" name="type" required>
                             <option value="text">Texto</option>
+                            <option value="image">Imagem</option>
                             <option value="file">Arquivo</option>
                         </select>
                     </div>
