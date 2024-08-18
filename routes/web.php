@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckAuthMiddleware;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\TagsController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ContatosController;
 use App\Http\Controllers\Admin\DisparosController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HistoricoController;
 use App\Http\Controllers\Admin\TemplatesController;
 use App\Http\Controllers\Admin\DispositivosController;
 
@@ -28,11 +29,15 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::get('/', [ContatosController::class, 'index'])->name('contatos.index');
         Route::get('/{id}/show', [ContatosController::class, 'show'])->name('contatos.show');
         Route::post('/store', [ContatosController::class, 'store'])->name('contatos.store');
+        Route::post('/upload', [ContatosController::class, 'upload'])->name('contatos.upload');
         Route::patch('/{id}/update', [ContatosController::class, 'update'])->name('contatos.update');
         Route::delete('/{id}/destroy', [ContatosController::class, 'destroy'])->name('contatos.destroy');
     });
 
-    Route::get('/dispositivos', [DispositivosController::class, 'index'])->name('dispositivos');
+    Route::group(['prefix' => 'dispositivos'], function () {
+        Route::get('/', [DispositivosController::class, 'index'])->name('dispositivos.index');
+        Route::post('/store', [DispositivosController::class, 'store'])->name('dispositivos.store');
+    });
 
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', [TemplatesController::class, 'index'])->name('templates.index');
@@ -50,9 +55,7 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::delete('/{id}/destroy', [DisparosController::class, 'destroy'])->name('disparos.destroy');
     });
 
-    Route::get('/historico', function () {
-        return view('admin.historico');
-    });
+    Route::get('/historico', [HistoricoController::class, 'index'])->name('historico');
 
 });
 
