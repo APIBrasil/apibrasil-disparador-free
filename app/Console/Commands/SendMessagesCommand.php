@@ -99,13 +99,17 @@ class SendMessagesCommand extends Command
 
                 if($message->template->type == 'image') {
 
-                    $sendFile = Service::WhatsApp("sendImage", [
+                    $sendFile = Service::WhatsApp("sendFile", [
                         "Bearer" => $token,
                         "DeviceToken" => $random_device->device_token,
                         "body" => [
                             "number" => $message->contato->number,
                             "path" => $message->template->path,
-                            "caption" => $message->template->text
+                            "options" => [
+                                "caption" => $message->template->text,
+                                "createChat" > true,
+                                "filename" => basename($message->template->path)
+                            ]
                         ]
                     ]);
 
@@ -125,23 +129,13 @@ class SendMessagesCommand extends Command
                         "body" => [
                             "number" => $message->contato->number,
                             "path" => $message->template->path,
+                            "options" => [
+                                "caption" => $message->template->text,
+                                "createChat" > true,
+                                "filename" => basename($message->template->path)
+                            ]
                         ]
                     ]);
-
-                    if($message->template->text){
-
-                        sleep(3);
-
-                        $sendText = Service::WhatsApp("sendText", [
-                            "Bearer" => $token,
-                            "DeviceToken" => $random_device->device_token,
-                            "body" => [
-                                "number" => $message->contato->number,
-                                "text" => $message->template->text
-                            ]
-                        ]);
-
-                    }
 
                     if (!$sendFile or $sendFile->response->result != 200) {
                         $message->status = 'error';

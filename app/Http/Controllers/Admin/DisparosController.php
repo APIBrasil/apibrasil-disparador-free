@@ -33,9 +33,6 @@ class DisparosController extends Controller
         ->with('tags', $tags);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -46,8 +43,8 @@ class DisparosController extends Controller
             $disparo->name = $request->name;
             $disparo->description = $request->description;
             $disparo->tag_id = $request->tag_id;
-            $disparo->status = $request->status;
             $disparo->user_id = Auth::user()->id;
+            $disparo->status = $request->status;
 
             $disparo->save();
 
@@ -81,19 +78,12 @@ class DisparosController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $disparo = Disparos::find($id);
-
         return response()->json($disparo, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -104,6 +94,7 @@ class DisparosController extends Controller
             $disparo->name = $request->name;
             $disparo->description = $request->description;
             $disparo->tag_id = $request->tag_id;
+            $disparo->user_id = Auth::user()->id;
             $disparo->status = $request->status;
 
             $disparo->save();
@@ -121,15 +112,11 @@ class DisparosController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
 
             $disparo = Disparos::find($id);
-
             $disparo->delete();
 
             return response()->json([

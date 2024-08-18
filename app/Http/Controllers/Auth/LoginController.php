@@ -35,7 +35,7 @@ class LoginController extends Controller
 
                 $client = new Client(['http_errors' => false, 'verify' => false]);
     
-                $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/login', [
+                $request = new RequestGuzzle('POST', env("API_URL").'/v2/login', [
                     'Content-Type' => 'application/json'
                 ], json_encode($credentials));
         
@@ -71,18 +71,16 @@ class LoginController extends Controller
     public function logout(): RedirectResponse
     {
 
-        $token = Cookie::get('token');
+        $token = Auth::user()->bearer_token_api_brasil;
         $client = new Client(['http_errors' => false, 'verify' => false]);
 
-        $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/logout', [
+        $request = new RequestGuzzle('POST', env("API_URL").'/v2/logout', [
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $token
         ]);
 
         $res = $client->sendAsync($request)->wait();
         $response = json_decode($res->getBody()->getContents());
-
-        // dd($response->error);
 
         if(isset($response->error) and $response->error) {
             return redirect('login')->with('error', $response->message);

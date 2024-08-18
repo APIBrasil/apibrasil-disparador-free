@@ -53,7 +53,7 @@ class WhatsAppController extends Controller
             "channel" => "whatsapp"
         ]);
 
-        $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/bulk/direct/sendText', $headers, $body);
+        $request = new RequestGuzzle('POST', env("API_URL").'/v2/bulk/direct/sendText', $headers, $body);
         $res = $client->sendAsync($request)->wait();
 
         $response = json_decode($res->getBody()->getContents());
