@@ -45,6 +45,7 @@ class DisparosController extends Controller
             $disparo->tag_id = $request->tag_id;
             $disparo->user_id = Auth::user()->id;
             $disparo->status = $request->status;
+            $disparo->mode = $request->mode;
 
             $disparo->save();
 
@@ -97,6 +98,7 @@ class DisparosController extends Controller
             $disparo->tag_id = $request->tag_id;
             $disparo->user_id = Auth::user()->id;
             $disparo->status = $request->status;
+            $disparo->mode = $request->mode;
 
             $disparo->save();
 
