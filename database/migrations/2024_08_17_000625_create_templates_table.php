@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->text('text')->nullable();
             $table->string('path')->nullable();
-            $table->string('type')->nullable();
+            $table->enum('type', ['text', 'image', 'file'])->default('text');
 
             $table->enum('status', ['active', 'inactive'])->default('active');
 
