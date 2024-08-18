@@ -71,7 +71,7 @@ class LoginController extends Controller
     public function logout(): RedirectResponse
     {
 
-        $token = Cookie::get('token');
+        $token = Auth::user()->bearer_token_api_brasil;
         $client = new Client(['http_errors' => false, 'verify' => false]);
 
         $request = new RequestGuzzle('POST', env("API_URL").'/v2/logout', [
@@ -81,8 +81,6 @@ class LoginController extends Controller
 
         $res = $client->sendAsync($request)->wait();
         $response = json_decode($res->getBody()->getContents());
-
-        // dd($response->error);
 
         if(isset($response->error) and $response->error) {
             return redirect('login')->with('error', $response->message);
