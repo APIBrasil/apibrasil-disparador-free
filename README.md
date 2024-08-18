@@ -39,7 +39,7 @@ Dashboard
 Uploads de contatos
 ![Contatos](screen-upload-contatos.png)
 
-Cadastro de campanha
+Cadastro de disparo
 ![Contatos](screen-novo-disparos.png)
 
 Disparador
