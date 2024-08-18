@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e8c3c14ff33b199b4a0838993eb8423",
+    "content-hash": "5fcdac69e0c54347cace5f2287685163",
     "packages": [
         {
             "name": "brick/math",
@@ -1049,6 +1049,75 @@
                 }
             ],
             "time": "2023-12-03T19:50:20+00:00"
+        },
+        {
+            "name": "jhowbhz/apigratis-sdk-php",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/APIBrasil/apigratis-sdk-php.git",
+                "reference": "8ebe8d73972192d691be64ae688be6dc2d0b4359"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/APIBrasil/apigratis-sdk-php/zipball/8ebe8d73972192d691be64ae688be6dc2d0b4359",
+                "reference": "8ebe8d73972192d691be64ae688be6dc2d0b4359",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.5",
+                "php": "^8"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.25",
+                "phpunit/phpunit": "^9.6"
+            },
+            "suggest": {
+                "ext-curl": "Required by ApiBrasil\\ to requests in services.",
+                "guzzlehttp/guzzle": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ApiBrasil\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jhon",
+                    "email": "contato@apibrasil.com.br",
+                    "homepage": "https://apibrasil.com.br",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This package is free and can be used for API Brazil website functions",
+            "homepage": "https://apibrasil.com.br",
+            "keywords": [
+                "PHP Requests",
+                "api",
+                "apigratis",
+                "brasil",
+                "cep",
+                "correios",
+                "messages",
+                "messages free",
+                "whatsapp"
+            ],
+            "support": {
+                "issues": "https://github.com/APIBrasil/apigratis-sdk-php/issues",
+                "source": "https://github.com/APIBrasil/apigratis-sdk-php/tree/0.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://issuehunt.io/r/jhowbhz",
+                    "type": "issuehunt"
+                }
+            ],
+            "time": "2024-03-01T22:02:46+00:00"
         },
         {
             "name": "laravel/framework",

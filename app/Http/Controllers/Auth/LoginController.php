@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cookie;
 use GuzzleHttp\Psr7\Request as RequestGuzzle;
@@ -27,46 +28,50 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        try {
+        //login
+        if (Auth::attempt($credentials)) {
 
-            $client = new Client(['http_errors' => false, 'verify' => false]);
+            try {
 
-            $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/login', [
-                'Content-Type' => 'application/json'
-            ], json_encode($credentials));
+                $client = new Client(['http_errors' => false, 'verify' => false]);
     
-            $res = $client->sendAsync($request)->wait();
-            $response = json_decode($res->getBody()->getContents());
+                $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/login', [
+                    'Content-Type' => 'application/json'
+                ], json_encode($credentials));
+        
+                $res = $client->sendAsync($request)->wait();
+                $response = json_decode($res->getBody()->getContents());
+    
+                if(isset($response->error) and $response->error) {
+                    return redirect('login')->with('error', $response->message);
+                }
+    
+                $token = $response->authorization->token;
 
-            if(isset($response->error) and $response->error) {
-                return redirect('login')->with('error', $response->message);
+                $user = User::find(Auth::id());
+                $user->bearer_token_api_brasil = $token;
+
+                $user->save();
+    
+                return redirect('/')->with('success', $response->message);
+    
+            } catch (\GuzzleHttp\Exception\GuzzleException $th) {
+                return redirect('login')->with('error', 'Erro ao tentar se conectar ao servidor de autenticação.');
             }
 
-            $token = $response->authorization->token;
-            Cookie::queue('token', $token, 60);
+            $request->session()->regenerate();
+            return redirect()->intended('/');
 
-            //cookie user
-            $user = json_encode([
-                'first_name' => $response->user->first_name,
-                'email' => $response->user->email,
-                'qt_devices' => $response->user->devices_count,
-            ]);
-            
-            Cookie::queue('user', $user, 60);
-
-            return redirect('/')->with('success', $response->message)->cookie('token', $token, 60)->cookie('user', $user, 60);
-
-        } catch (\GuzzleHttp\Exception\GuzzleException $th) {
-            return redirect('login')->with('error', 'Erro ao tentar se conectar ao servidor de autenticação.');
+        }else{
+            return back()->with('error', 'Credenciais inválidas.');
         }
-
     }
 
     //logout
     public function logout(): RedirectResponse
     {
-        $token = Cookie::get('token');
 
+        $token = Cookie::get('token');
         $client = new Client(['http_errors' => false, 'verify' => false]);
 
         $request = new RequestGuzzle('POST', 'https://gateway.apibrasil.io/api/v2/logout', [
@@ -83,7 +88,12 @@ class LoginController extends Controller
             return redirect('login')->with('error', $response->message);
         }
 
-        Cookie::queue(Cookie::forget('token'));
+        $user = User::find(Auth::id());
+        $user->bearer_token_api_brasil = null;
+        $user->save();
+
+        Auth::logout();
+
         return redirect('login')->with('success', 'Logout efetuado com sucesso.');
 
     }
