@@ -39,17 +39,23 @@ class Disparos extends Model
 
     public function messages()
     {
-        return $this->hasMany(Mensagens::class, 'disparo_id', 'id');
+        return $this->hasMany(Mensagens::class, 'disparo_id', 'id')
+        ->with('contato')
+        ->with('tag');
     }
 
     public function messagesPending()
     {
-        return $this->hasMany(Mensagens::class, 'disparo_id', 'id')->where('status', 'pending');
+        return $this->hasMany(Mensagens::class, 'disparo_id', 'id')->where('status', 'pending')
+        ->with('contato')
+        ->with('tag');
     }
 
     public function messagesSent()
     {
-        return $this->hasMany(Mensagens::class, 'disparo_id', 'id')->where('status', 'sent');
+        return $this->hasMany(Mensagens::class, 'disparo_id', 'id')->where('status', 'sent')
+        ->with('contato')
+        ->with('tag');
     }
 
     public function getTemplates()

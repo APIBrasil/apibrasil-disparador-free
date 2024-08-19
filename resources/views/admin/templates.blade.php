@@ -117,6 +117,7 @@
                     <div class="col-12">
                         <label for="text" class="form-label">Mensagem</label>
                         <textarea class="form-control" id="text" name="text" required cols="10" rows="5" style="height: 400px;"></textarea>
+                        <small class="form-text text-muted">Use as tags {saudacao} {nome}, {tag}, {data}, {hora}, {random} para personalizar a mensagem</small>
                     </div>
 
                 </div>

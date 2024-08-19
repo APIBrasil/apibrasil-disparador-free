@@ -40,7 +40,14 @@
                                 <td> {{ $disparo->getTemplates() }} </td>
                                 <td> {{ $disparo->messagesPending->count() ?? ""}} </td>
                                 <td> {{ $disparo->messagesSent->count() ?? ""}} </td>
-                                <td> {{ $disparo->mode }} </td>
+                                <td style="color: {{ $disparo->mode == 'agressive' ? 'red' : 'black' }};width: 150px">
+                                    @if ($disparo->mode == 'normal')
+                                        Normal
+                                    @elseif ($disparo->mode == 'slow')
+                                        Lento
+                                    @else
+                                        Agressivo ⚠️
+                                    @endif
                                 <td>
                                 <a href="#" class="btn btn-primary text-white" onclick="getItems({{ $disparo->id }})"><i class="fas fa-edit"></i></a>
                                 <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem({{ $disparo->id }})"><i class="fas fa-trash"></i></a>
@@ -54,6 +61,33 @@
                 </div>
             </div>
         </div>
+        
+        <div class="row mt-4">
+
+            <div class="col-3 col-lg-4">
+
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> Lento: Envia mensagens com intervalo de tempo, de 120 a 240 segundos, podendo ser bloqueado pelo WhatsApp.
+                </div>
+            </div>
+            
+            <div class="col-3 col-lg-4">
+
+                <div class="alert alert-primary" role="alert">
+                    <i class="fas fa-check"></i> Normal: Envia mensagens com intervalo de tempo, de 60 a 120 segundos, podendo ser bloqueado pelo WhatsApp.
+                </div>
+
+            </div>
+
+            <div class="col-3 col-lg-4">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-info-circle"></i> Agressivo: Envia mensagens com intervalo de tempo, de 10 a 30 segundos, podendo ser bloqueado pelo WhatsApp.
+                </div>
+            </div>
+
+
+        </div>
+
     </div>
 
     <!-- Modal -->

@@ -56,6 +56,8 @@ class SendMessagesCommand extends Command
 
             foreach ($messages_pending as $message) {
 
+                $messageParsed = $this->parseMessage($message);
+
                 switch ($disparos->mode) {
                     case 'agressive':
                         $random = rand(1, 10);
@@ -89,9 +91,15 @@ class SendMessagesCommand extends Command
                         "DeviceToken" => $random_device->device_token,
                         "body" => [
                             "number" => $message->contato->number,
-                            "text" => $message->template->text
+                            "text" => $messageParsed
                         ]
                     ]);
+
+                    if(!isset($sendText->response->result)) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
     
                     if (!$sendText or $sendText->response->result != 200) {
                         $message->status = 'error';
@@ -109,12 +117,18 @@ class SendMessagesCommand extends Command
                             "number" => $message->contato->number,
                             "path" => $message->template->path,
                             "options" => [
-                                "caption" => $message->template->text,
+                                "caption" => $messageParsed,
                                 "createChat" > true,
                                 "filename" => basename($message->template->path)
                             ]
                         ]
                     ]);
+
+                    if(!isset($sendFile->response->result)) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
 
                     if (!$sendFile or $sendFile->response->result != 200) {
                         $message->status = 'error';
@@ -133,12 +147,18 @@ class SendMessagesCommand extends Command
                             "number" => $message->contato->number,
                             "path" => $message->template->path,
                             "options" => [
-                                "caption" => $message->template->text,
+                                "caption" => $messageParsed,
                                 "createChat" > true,
                                 "filename" => basename($message->template->path)
                             ]
                         ]
                     ]);
+
+                    if(!isset($sendFile->response->result)) {
+                        $message->status = 'error';
+                        $message->save();
+                        continue;
+                    }
 
                     if (!$sendFile or $sendFile->response->result != 200) {
                         $message->status = 'error';
@@ -156,6 +176,50 @@ class SendMessagesCommand extends Command
 
             }
 
+        }
+    }
+
+    function parseMessage($messageData)
+    {
+
+        //replace {nome} with the name of the contact
+        $message = str_replace("{nome}", $messageData->contato->name, $messageData->template->text);
+
+        // dd($message);
+
+        //replace saudacao (bom dia)
+        $message = str_replace("{saudacao}", $this->getSaudacao(), $message);
+
+        //replace {hora} with the current time
+        $message = str_replace("{hora}", date('H:i'), $message);
+
+        //replace {data} with the current date
+        $message = str_replace("{data}", date('d/m/Y'), $message);
+
+        //tag {tag} with the name of the contact
+        $message = str_replace("{tag}", $messageData->tag->name, $message);
+
+        //random number 10 digits
+        $message = str_replace("{random}", rand(1000000000, 9999999999), $message);
+
+        return $message;
+
+    }
+
+    function getSaudacao()
+    {
+        $hora = date('H');
+
+        if ($hora >= 0 && $hora < 12) {
+            return "Bom dia";
+        }
+
+        if ($hora >= 12 && $hora < 18) {
+            return "Boa tarde";
+        }
+
+        if ($hora >= 18 && $hora < 24) {
+            return "Boa noite";
         }
     }
 }
