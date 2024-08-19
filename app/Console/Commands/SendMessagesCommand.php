@@ -56,7 +56,7 @@ class SendMessagesCommand extends Command
 
             foreach ($messages_pending as $message) {
 
-                $messageParsed = $this->parseMessage($message->template->text);
+                $messageParsed = $this->parseMessage($message);
 
                 switch ($disparos->mode) {
                     case 'agressive':
@@ -183,22 +183,24 @@ class SendMessagesCommand extends Command
     {
 
         //replace {nome} with the name of the contact
-        $message = str_replace("{nome}", $messageData->contato->name, $messageData);
+        $message = str_replace("{nome}", $messageData->contato->name, $messageData->template->text);
+
+        // dd($message);
 
         //replace saudacao (bom dia)
-        $message = str_replace("{saudacao}", $this->getSaudacao(), $messageData);
+        $message = str_replace("{saudacao}", $this->getSaudacao(), $message);
 
         //replace {hora} with the current time
-        $message = str_replace("{hora}", date('H:i'), $messageData);
+        $message = str_replace("{hora}", date('H:i'), $message);
 
         //replace {data} with the current date
-        $message = str_replace("{data}", date('d/m/Y'), $messageData);
+        $message = str_replace("{data}", date('d/m/Y'), $message);
 
         //tag {tag} with the name of the contact
-        $message = str_replace("{tag}", $messageData->tag->name, $messageData);
+        $message = str_replace("{tag}", $messageData->tag->name, $message);
 
         //random number 10 digits
-        $message = str_replace("{random}", rand(1000000000, 9999999999), $messageData);
+        $message = str_replace("{random}", rand(1000000000, 9999999999), $message);
 
         return $message;
 
