@@ -96,7 +96,7 @@
                                 {{ $item->created_at ? Carbon\Carbon::parse($item->created_at)->format('d/m/y H:i') : 'Sem data' }}
                             </td>
                             <td>
-                                {{ $item->send_at ? Carbon\Carbon::parse($item->send_at)->format('d/m/Y H:i:s') : 'Não enviado' }}
+                                {{ $item->send_at ? Carbon\Carbon::parse($item->send_at)->format('d/m/y H:i') : 'Não enviado' }}
                             </td>
                             
                             <td>
