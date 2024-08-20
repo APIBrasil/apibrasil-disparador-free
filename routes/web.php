@@ -61,6 +61,7 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
     });
 
     Route::get('/historico', [HistoricoController::class, 'index'])->name('historico');
+    Route::get('/historico/datatables', [HistoricoController::class, 'datatables'])->name('historico.datatables');
 
 });
 
