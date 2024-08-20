@@ -30,9 +30,9 @@ return new class extends Migration
             $table->unsignedBigInteger('disparo_id')->nullable();
             $table->foreign('disparo_id')->references('id')->on('disparos');
 
-            $table->timestamp('send_at')->nullable();
-
             $table->enum('status', ['pending', 'sent', 'error'])->default('pending');
+
+            $table->timestamp('send_at')->nullable();
 
             $table->timestamps();
         });
