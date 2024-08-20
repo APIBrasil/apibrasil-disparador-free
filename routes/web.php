@@ -33,6 +33,8 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::post('/upload', [ContatosController::class, 'upload'])->name('contatos.upload');
         Route::patch('/{id}/update', [ContatosController::class, 'update'])->name('contatos.update');
         Route::delete('/{id}/destroy', [ContatosController::class, 'destroy'])->name('contatos.destroy');
+        Route::get('/datatables', [ContatosController::class, 'datatables'])->name('contatos.datatables');
+
     });
 
     Route::group(['prefix' => 'dispositivos'], function () {
@@ -42,6 +44,8 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::patch('/{id}/update', [DispositivosController::class, 'update'])->name('dispositivos.update');
         Route::post('/{device_token}/start', [DispositivosController::class, 'start'])->name('dispositivos.start');
         Route::delete('/{search}/destroy', [DispositivosController::class, 'destroy'])->name('dispositivos.destroy');
+        Route::get('/datatables', [DispositivosController::class, 'datatables'])->name('dispositivos.datatables');
+
     });
 
     Route::group(['prefix' => 'templates'], function () {
@@ -58,10 +62,14 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
         Route::post('/store', [DisparosController::class, 'store'])->name('disparos.store');
         Route::patch('/{id}/update', [DisparosController::class, 'update'])->name('disparos.update');
         Route::delete('/{id}/destroy', [DisparosController::class, 'destroy'])->name('disparos.destroy');
+        Route::get('/datatables', [DisparosController::class, 'datatables'])->name('disparos.datatables');
+
     });
 
-    Route::get('/historico', [HistoricoController::class, 'index'])->name('historico');
-    Route::get('/historico/datatables', [HistoricoController::class, 'datatables'])->name('historico.datatables');
+    Route::group(['prefix' => 'historico'], function () {
+        Route::get('/', [HistoricoController::class, 'index'])->name('historico');
+        Route::get('/datatables', [HistoricoController::class, 'datatables'])->name('historico.datatables');
+    });
 
 });
 
