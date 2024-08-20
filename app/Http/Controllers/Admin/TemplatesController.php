@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class TemplatesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        $templates = Templates::orderBy('id', 'desc')->get();
+        $templates = Templates::orderBy('id', 'desc')
+        ->where('status', 'active')
+        ->where('user_id', Auth::id())
+        ->get();
 
         return view('admin.templates')
         ->with('templates', $templates);
@@ -51,7 +52,9 @@ class TemplatesController extends Controller
     {
         try {
             
-            $template = Templates::find($id);
+            $template = Templates::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
 
             return response()->json($template);
 
@@ -66,7 +69,10 @@ class TemplatesController extends Controller
     {
         try {
             
-            $template = Templates::find($id);
+            $template = Templates::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+            
             $template->name = $request->name;
             $template->description = $request->description;
             $template->path = $request->path;
@@ -92,7 +98,10 @@ class TemplatesController extends Controller
     {
         try {
             
-            $template = Templates::find($id);
+            $template = Templates::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
             $template->delete();
 
             return response()->json([

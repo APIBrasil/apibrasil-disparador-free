@@ -12,19 +12,21 @@ use Illuminate\Support\Facades\Auth;
 
 class DisparosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        $disparos = Disparos::orderBy('id', 'desc')->get();
+        $disparos = Disparos::orderBy('id', 'desc')
+        ->where('user_id', Auth::user()->id)
+        ->get();
         
         $templates = Templates::orderBy('id', 'desc')
         ->where('status', 'active')
+        ->where('user_id', Auth::user()->id)
         ->get();
 
         $tags = Tags::orderBy('id', 'desc')
         ->where('status', 'active')
+        ->where('user_id', Auth::user()->id)
         ->get();
 
         return view('admin.disparos')
@@ -81,7 +83,10 @@ class DisparosController extends Controller
 
     public function show(string $id)
     {
-        $disparo = Disparos::find($id);
+        $disparo = Disparos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+
         return response()->json($disparo, 200);
     }
 
@@ -89,7 +94,9 @@ class DisparosController extends Controller
     {
         try {
 
-            $disparo = Disparos::find($id);
+            $disparo = Disparos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
 
             $disparo->templates_id = implode(',', $request->templates_id);
 
@@ -119,7 +126,10 @@ class DisparosController extends Controller
     {
         try {
 
-            $disparo = Disparos::find($id);
+            $disparo = Disparos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+            
             $disparo->delete();
 
             return response()->json([

@@ -16,16 +16,16 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $online = Dispositivos::online(Auth::user()->id);
-        $offline = Dispositivos::offline(Auth::user()->id);
+        $online = Dispositivos::online($user->id);
+        $offline = Dispositivos::offline($user->id);
 
         $mensagens = Mensagens::orderBy('id', 'desc')
         ->where('status','sent')
-        ->where('user_id', Auth::user()->id)
+        ->where('user_id', $user->id)
         ->count();
 
         $contatos = Contatos::orderBy('id', 'desc')
-        ->where('user_id', Auth::user()->id)
+        ->where('user_id', $user->id)
         ->count();
 
         return view('admin.dashboard')
