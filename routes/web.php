@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckAuthMiddleware;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\ContatosController;
 use App\Http\Controllers\Admin\DisparosController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -64,5 +65,8 @@ Route::group(['middleware' => CheckAuthMiddleware::class], function () {
 });
 
 Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::get('register', [RegisterController::class, 'form'])->name('form');
+Route::post('register', [RegisterController::class, 'register'])->name('register');
+
 Route::post('auth', [LoginController::class, 'auth'])->name('auth');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
