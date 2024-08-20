@@ -28,34 +28,6 @@
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                            @foreach ($disparos as $disparo)
-                            <tr>
-                                <th scope="row"> {{ $disparo->name ?? "" }} </th>
-                                <td> {{ $disparo->description ?? ""}} </td>
-                                <td>
-                                    <span class="badge" style="background: {{ $disparo->tag->color }}">{{ $disparo->tag->name }}</span>
-                                </td>
-                                <td> {{ $disparo->getTemplates() }} </td>
-                                <td> {{ $disparo->messagesPending->count() ?? ""}} </td>
-                                <td> {{ $disparo->messagesSent->count() ?? ""}} </td>
-                                <td style="color: {{ $disparo->mode == 'agressive' ? 'red' : 'black' }};width: 150px">
-                                    @if ($disparo->mode == 'normal')
-                                        Normal
-                                    @elseif ($disparo->mode == 'slow')
-                                        Lento
-                                    @else
-                                        Agressivo ⚠️
-                                    @endif
-                                <td>
-                                <a href="#" class="btn btn-primary text-white" onclick="getItems({{ $disparo->id }})"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem({{ $disparo->id }})"><i class="fas fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            @endforeach
-                       
-                        </tbody>
                     </table>
 
                 </div>
