@@ -110,6 +110,10 @@
 
     <script>
 
+        let table = new DataTable('#table', {
+            responsive: true
+        });
+
         const getItems = (id) => {
 
         fetch(`/tags/${id}/show`)

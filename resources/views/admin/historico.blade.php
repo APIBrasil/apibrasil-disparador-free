@@ -69,7 +69,7 @@
             <div class="app-card app-card-stat shadow-sm h-100">
                 <div class="app-card-body p-3 p-lg-4">
 
-                    <table class="table table-striped table-hover mb-0 table-responsive" id="table">
+                    <table class="table table-striped table-hover mb-0 table-responsive" id="table" style="width: 100%">
                         <thead>
                         <tr>
                             <th scope="col">Destino</th>

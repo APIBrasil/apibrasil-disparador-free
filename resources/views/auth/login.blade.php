@@ -43,6 +43,15 @@
 								<input id="password" name="password" type="password" class="form-control signin-password" placeholder="******" required="required" autocomplete="off">
 							</div><!--//form-group-->
 
+							<div class="extra mb-3">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="" id="whatsappInc" checked>
+									<label class="form-check-label" for="whatsappInc" >
+										Ao continuar, você concorda em seguir as regras do <a href="https://faq.whatsapp.com/361005896189245/?locale=pt_BR" target="_blank" class="app-link">WhatsApp</a>
+									</label>
+								</div>
+							</div><!--//extra-->
+
 							@if (session('error'))
 								<div class="alert alert-danger">
 									{{ session('error') }}
@@ -56,10 +65,15 @@
 							@endif
 
 							<div class="text-center">
-								<button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Autenticar</button>
+								<button type="submit" class="btn btn-success w-100 theme-btn mx-auto text-white">Autenticar</button>
+								<a href="/register" class="btn w-50 mt-2 theme-btn mx-auto text-black">Cadastre-se</a>
 							</div>
 
 						</form>
+
+						
+						<hr class="divider my-2 mt-5">
+						<h4 class="auth-option text-center">Ainda não tem uma conta na APIBrasil? <br /> <a class="text-link" href="https://app.apibrasil.io/auth/register" >Cadastrar-se</a> </h4>
 						
 					</div><!--//auth-form-container-->	
 
@@ -68,10 +82,10 @@
 			    <footer class="app-auth-footer">
 				    <div class="container text-center py-3">
 				         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-			        <small class="copyright">
-					Copyrigth &copy; {{ date('Y') }} <a class="app-link" href="{{ env('APP_URL') }}" target="_blank">{{ env('APP_NAME') }}</a>. All rights reserved.						
-					</small>
-				</div>
+						<small class="copyright">
+						Copyrigth &copy; {{ date('Y') }} <a class="app-link" href="{{ env('APP_URL') }}" target="_blank">{{ env('APP_NAME') }}</a>. All rights reserved.						
+						</small>
+					</div>
 			    </footer><!--//app-auth-footer-->	
 		    </div><!--//flex-column-->   
 	    </div><!--//auth-main-col-->
