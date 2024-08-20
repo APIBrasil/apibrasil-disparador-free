@@ -21,7 +21,7 @@ Esse é o roadmap planejado para a plataforma
 | OK   |   Editar dispositivo                        |   
 | OK   |   Deletar dispositivo                       |
 | OK   |   Envia Texto, Imagens e arquivos           |
-| Em andamento   |   Criar usuário                   |   
+| OK   |   Criar usuário                             |   
 | Em andamento   |   Editar usuário                  |   
 | Em andamento   |   Deletar usuário                 |   
 -----------------------------------------------------
