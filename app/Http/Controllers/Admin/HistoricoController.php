@@ -7,6 +7,7 @@ use App\Models\Dispositivos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class HistoricoController extends Controller
 {
@@ -16,11 +17,6 @@ class HistoricoController extends Controller
     public function index()
     {
 
-        $dispositivos = Dispositivos::getAll();
-
-        $mensagens = Mensagens::orderBy('id', 'desc')
-        ->where('user_id', Auth::id())
-        ->get();
 
         $mensagensEnviadas = Mensagens::orderBy('id', 'desc')
         ->where('user_id', Auth::id())
@@ -38,16 +34,29 @@ class HistoricoController extends Controller
         ->get();
 
         return view('admin.historico')
-        ->with('dispositivos', $dispositivos)
-        ->with('mensagens', $mensagens)
         ->with('mensagensEnviadas', $mensagensEnviadas)
         ->with('mensagensPendentes', $mensagensPendentes)
         ->with('messagensError', $messagensError);
     }
 
-    public function show(string $id)
+    public function dataTables()
     {
-        //
+        
+        $mensagens = Mensagens::where('user_id', Auth::id())
+        ->orderBy('id', 'desc')
+        ->with(['contato' => function($query){
+            $query->select('id', 'number'); // Include 'id' to avoid issues with missing columns
+        }, 'tag' => function($query){
+            $query->select('id', 'name'); // Include 'id' to avoid issues with missing columns
+        }])
+        ->with('template', function($query){
+            $query->select('id', 'name'); // Include 'id' to avoid issues with missing columns
+        })
+        ->get();
+
+
+        return DataTables::of($mensagens)->make(true);
+
     }
 
     public function update(Request $request, string $id)

@@ -80,44 +80,6 @@
                             <th scope="col">Status</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                        @foreach ($mensagens as $item)
-                        <tr>
-                            <th scope="row">
-                                {{ $item->contato ? $item->contato->number : 'Sem contato' }}
-                            </th>
-                            <td>
-                                <span class="badge" style="background-color: {{ $item->tag ? $item->tag->color : '#000' }}">{{ $item->tag ? $item->tag->name : 'Sem tag' }}</span>
-
-                            <td>
-                                {{ $item->template ? $item->template->name : 'Sem template' }}
-                            <td>
-                                {{ $item->created_at ? Carbon\Carbon::parse($item->created_at)->format('d/m/y H:i') : 'Sem data' }}
-                            </td>
-                            <td>
-                                {{ $item->send_at ? Carbon\Carbon::parse($item->send_at)->format('d/m/y H:i') : 'Não enviado' }}
-                            </td>
-                            
-                            <td>
-                                @switch($item->status)
-                                    @case('pending')
-                                        <span class="badge bg-warning">Pendente</span>
-                                        @break
-                                    @case('sent')
-                                        <span class="badge bg-success">Enviado</span>
-                                        @break
-                                    @case('failed')
-                                        <span class="badge bg-danger">Falha</span>
-                                        @break
-                                    @default
-                                        <span class="badge bg-secondary">{{ $item->status }}</span>
-                                @endswitch
-                            </td>
-                        </tr>
-                        @endforeach
-                        
-                        </tbody>
                     </table>
 
                 </div>
@@ -130,7 +92,52 @@
     <script>
 
         let table = new DataTable('#table', {
-            responsive: true
+            responsive: true,
+            ajax: '/historico/datatables',
+            lengthChange: true,
+            autoFill: true,
+            select: {
+                style: 'multi'
+            },
+            processing: false,
+            deferRender: true,
+            cache: true,
+            destroy: true,
+            serverSide: false,
+            stateSave: true,
+            searchDelay: 350,
+            search: {
+                "smart": true,
+                "caseInsensitive": false
+            },
+            columns: [
+                { data: 'contato.number', name: 'contato.number' },
+                { data: 'tag.name', name: 'tag.name' },
+                { data: 'template.name', name: 'template.name' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'send_at', name: 'send_at' },
+                { data: 'status', name: 'status' },
+            ],
+            columnDefs: [
+                {
+                    targets: 3,
+                    render: function (data, type, row) {
+                        return moment(data).format('DD/MM/YY HH:mm');
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row) {
+                        return data ? moment(data).format('DD/MM/YY HH:mm') : '';
+                    }
+                },
+                {
+                    targets: 5,
+                    render: function (data, type, row) {
+                        return data == 'pending' ? '<span class="badge bg-warning">Pendente</span>' : data == 'sent' ? '<span class="badge bg-success">Enviado</span>' : '<span class="badge bg-danger">Erro</span>';
+                    }
+                }
+            ]
         });
 
     </script>
