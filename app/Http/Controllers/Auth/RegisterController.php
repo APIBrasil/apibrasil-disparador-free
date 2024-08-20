@@ -40,8 +40,7 @@ class RegisterController extends Controller
             }
 
             if (User::where('email', $email)->exists()) {
-                return redirect('register')->with('error', 'Este email já está em uso.');
-                return 1;
+                return redirect('register')->with('error', "O e-mail {$email} já está em uso.");
             }
 
             $client = new Client(['http_errors' => false, 'verify' => false]);
