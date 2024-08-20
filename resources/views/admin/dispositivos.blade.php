@@ -20,7 +20,8 @@
                         <thead>
                         <tr>
                             <th scope="col">Device</th>
-                            <th scope="col">Device Token</th>
+                            <th scope="col">DeviceToken</th>
+                            <th scope="col">Número</th>
                             <th scope="col">API</th>
                             <th scope="col">Cadastrado</th>
                             <th scope="col">Status</th>
@@ -38,6 +39,9 @@
                             </th>
                             <td>
                                 {{ $item->device_token }}
+                            </td>
+                            <td>
+                                {{ $item->number_device ?? '' }}
                             </td>
                             <td>
                                 {{ $item->service->name }}

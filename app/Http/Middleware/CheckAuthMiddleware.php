@@ -13,14 +13,13 @@ class CheckAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        //if user is logged in
         if(!Auth::check()) {
             return redirect('login')->with('error', 'Você precisa estar logado para acessar essa página.');
         }
 
         $token_cookie = Auth::user()->bearer_token_api_brasil;
 
-        if(!$token_cookie) {
+        if(!$token_cookie or $token_cookie == 'null') {
             return redirect('login')->with('error', 'Seu token da APIBrasil expirou, faça login novamente.');
         }
 

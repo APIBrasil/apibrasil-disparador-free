@@ -19,25 +19,21 @@ class Dispositivos extends Model
     {
         try {
             
-            $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $token
+            $all = Service::Device("", [
+                "Bearer" => $token,
+                "method" => "GET",
             ]);
-
-            $res = $client->sendAsync($request)->wait();
-            $response = json_decode($res->getBody()->getContents());
-
-            return $response;
+            
+            return $all;
 
         } catch (\GuzzleHttp\Exception\GuzzleException $th) {
             return response()->json(['error' => $th->getMessage()]);
         }
     }
 
-    public static function show($id)
+    public static function show($deviceSearch)
     {
         try {
             
@@ -47,7 +43,7 @@ class Dispositivos extends Model
                 "Bearer" => $token,
                 "method" => "GET",
                 "body" => [
-                    "search" => $id
+                    "search" => $deviceSearch
                 ]
             ]);
 
@@ -58,23 +54,19 @@ class Dispositivos extends Model
         }
     }
 
-    public static function offline($id)
+    public static function offline($userID)
     {
         try {
             
-            $client = new Client(['http_errors' => false, 'verify' => false]);	
-            $token = User::find($id)->bearer_token_api_brasil;
+            $token = User::find($userID)->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $token
+            $all = Service::Device("", [
+                "Bearer" => $token,
+                "method" => "GET",
             ]);
 
-            $res = $client->sendAsync($request)->wait();
-            $response = json_decode($res->getBody()->getContents());
-
-            $response = array_filter($response, function($dispositivo) {
-                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status != 'connected' or $dispositivo->status != 'open' or $dispositivo->status != 'inChat');
+            $response = array_filter($all, function($dispositivo) {
+                return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status != 'connected' and $dispositivo->status != 'open' and $dispositivo->status != 'inChat');
             });
 
             return $response;
@@ -84,22 +76,18 @@ class Dispositivos extends Model
         }
     }
 
-    public static function online($id)
+    public static function online($userID)
     {
         try {
             
-            $client = new Client(['http_errors' => false, 'verify' => false]);	
-            $token = User::find($id)->bearer_token_api_brasil;
+            $token = User::find($userID)->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', env("API_URL").'/v2/devices', [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $token
+            $all = Service::Device("", [
+                "Bearer" => $token,
+                "method" => "GET",
             ]);
 
-            $res = $client->sendAsync($request)->wait();
-            $response = json_decode($res->getBody()->getContents());
-
-            $response = array_filter($response, function($dispositivo) {
+            $response = array_filter($all, function($dispositivo) {
                 return ($dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet') and ($dispositivo->status == 'connected' or $dispositivo->status == 'open' or $dispositivo->status == 'inChat');
             });
 

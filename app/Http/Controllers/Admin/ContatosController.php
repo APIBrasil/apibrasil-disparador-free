@@ -12,13 +12,17 @@ use Illuminate\Support\Facades\Validator;
 
 class ContatosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        $contatos = Contatos::all();
-        $tags = Tags::orderBy('id', 'desc')->where('status', 'active')->get();
+        $contatos = Contatos::where('user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')
+        ->get();
+
+        $tags = Tags::orderBy('id', 'desc')
+        ->where('status', 'active')
+        ->where('user_id', Auth::user()->id)
+        ->get();
 
         return view('admin.contatos')
         ->with('contatos', $contatos)
@@ -73,14 +77,14 @@ class ContatosController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         try {
 
-            $contato = Contatos::find($id);
+            $contato = Contatos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+            
             return response()->json($contato);
 
         } catch (\Exception $e) {
@@ -145,9 +149,6 @@ class ContatosController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -173,7 +174,9 @@ class ContatosController extends Controller
                 'number' => preg_replace('/\D/', '', $request->number)
             ]);
             
-            $contato = Contatos::find($id);
+            $contato = Contatos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
 
             $contato->name = $request->name;
             $contato->number = $request->number;
@@ -195,13 +198,14 @@ class ContatosController extends Controller
         }   
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
-            $contato = Contatos::find($id);
+
+            $contato = Contatos::where('id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+
             $contato->delete();
 
             return response()->json([

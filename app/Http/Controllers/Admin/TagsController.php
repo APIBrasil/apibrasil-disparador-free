@@ -11,12 +11,11 @@ use Illuminate\Support\Facades\Validator;
 
 class TagsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $tags = Tags::all();
+        $tags = Tags::where('user_id', Auth::id())
+        ->orderBy('id', 'desc')
+        ->get();
 
         return view('admin.tags')
         ->with('tags', $tags);
@@ -75,7 +74,9 @@ class TagsController extends Controller
     {
         try {
 
-            $tag = Tags::find($id);
+            $tag = Tags::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
 
             return response()->json($tag);
 
@@ -112,7 +113,9 @@ class TagsController extends Controller
                 'number' => preg_replace('/\D/', '', $request->number)
             ]);
             
-            $tag = Tags::find($id);
+            $tag = Tags::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
 
             $tag->name = $request->name;
             $tag->description = $request->description;
@@ -139,7 +142,10 @@ class TagsController extends Controller
     {
         try {
 
-            $tag = Tags::find($id);
+            $tag = Tags::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
+
             $tag->delete();
 
             return response()->json([

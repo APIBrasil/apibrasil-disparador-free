@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
-    <title>@yield('title', 'Login')</title>
+    <title>@yield('title', 'Cadastrar-se')</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -20,28 +20,28 @@
 
 </head> 
 
-<body class="app app-login p-0">    	
+<body class="app app-signup p-0">    	
     <div class="row g-0 app-auth-wrapper">
 	    <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
 		    <div class="d-flex flex-column align-content-end">
 			    <div class="app-auth-body mx-auto">	
-				    <div class="app-auth-branding mb-4"><a class="app-logo" href="/"><img class="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo"></a></div>
-					<h2 class="auth-heading text-center mb-5">{{ env('APP_NAME') }}</h2>
-			        <div class="auth-form-container text-start">
+				    <div class="app-auth-branding mb-4"><a class="app-logo" href="index.html"><img class="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo"></a></div>
+					<h2 class="auth-heading text-center mb-4">Para continuar, você precisa ter uma conta na APIBrasil </h2>
+	
+					<div class="auth-form-container text-start mx-auto">
+						<form class="auth-form login-form" method="post" action="/register">
 
-						<form class="auth-form login-form" method="post" action="/auth">
-							
 							@csrf
 
 							<div class="email mb-3">
-								<label class="sr-only" for="email">Email</label>
-								<input id="email" name="email" type="email" class="form-control signin-email" placeholder="ellon@musk.com" required="required" autocomplete="off">
-							</div><!--//form-group-->
+								<label class="sr-only" for="email">Your Email</label>
+								<input id="email" name="email" type="email" class="form-control signup-email" placeholder="Email" required="required">
+							</div>
 
 							<div class="password mb-3">
 								<label class="sr-only" for="password">Password</label>
-								<input id="password" name="password" type="password" class="form-control signin-password" placeholder="******" required="required" autocomplete="off">
-							</div><!--//form-group-->
+								<input id="password" name="password" type="password" class="form-control signup-password" placeholder="Create a password" required="required">
+							</div>
 
 							<div class="extra mb-3">
 								<div class="form-check">
@@ -63,34 +63,29 @@
 									{{ session('success') }}
 								</div>
 							@endif
-
+							
 							<div class="text-center">
-								<button type="submit" class="btn btn-success w-100 theme-btn mx-auto text-white">Autenticar</button>
-								<a href="/register" class="btn w-50 mt-2 theme-btn mx-auto text-black">Cadastre-se</a>
+								<button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Vincular conta</button>
+								<a href="/login" class="btn w-100 mt-2 theme-btn mx-auto">Cancelar</a>
 							</div>
 
-						</form>
-
-						
-						<hr class="divider my-2 mt-5">
-						<h4 class="auth-option text-center">Ainda não tem uma conta na APIBrasil? <br /> <a class="text-link" href="https://app.apibrasil.io/auth/register" >Cadastrar-se</a> </h4>
-						
+						</form><!--//auth-form-->
 					</div><!--//auth-form-container-->	
-
+				    
 			    </div><!--//auth-body-->
 		    
 			    <footer class="app-auth-footer">
 				    <div class="container text-center py-3">
 				         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-						<small class="copyright">
-						Copyrigth &copy; {{ date('Y') }} <a class="app-link" href="{{ env('APP_URL') }}" target="_blank">{{ env('APP_NAME') }}</a>. All rights reserved.						
-						</small>
-					</div>
+			        <small class="copyright">
+					Copyrigth &copy; {{ date('Y') }} <a class="app-link" href="{{ env('APP_URL') }}" target="_blank">{{ env('APP_NAME') }}</a>. All rights reserved.						
+					</small>
+				</div>
 			    </footer><!--//app-auth-footer-->	
 		    </div><!--//flex-column-->   
 	    </div><!--//auth-main-col-->
 	    <div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col">
-		    <div class="auth-background-holder">
+		    <div class="auth-background-holder">			    
 		    </div>
 		    <div class="auth-background-mask"></div>
 		    <div class="auth-background-overlay p-3 p-lg-5">
