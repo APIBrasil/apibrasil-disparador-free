@@ -184,14 +184,14 @@
                 {
                     targets: 6,
                     render: function (data, type, row) {
-                        let btnEdit= `<button class="btn btn-primary" onclick="getItems(${row.id})"><i class="fa fa-edit"></i></button>`;
+                        let btnEdit= `<button class="btn btn-primary" onclick="getItems('${row.search}')"><i class="fa fa-edit"></i></button>`;
     
                         let btnStart = `<button class="btn btn-success" onclick="startDevice('${row.device_token}')"><i class="fa fa-qrcode"></i></button>`;
                         if(row.status == 'inChat' || row.status == 'CONNECTED' || row.status == 'open') {
                             btnStart = "";
                         }
                      
-                        let btnDelete = `<button class="btn btn-danger" onclick="deleteItem(${row.id})"><i class="fa fa-trash"></i></button>`;
+                        let btnDelete = `<button class="btn btn-danger" onclick="deleteItem('${row.search}')"><i class="fa fa-trash"></i></button>`;
 
                         return `${btnEdit} ${btnStart} ${btnDelete}`;
                     }
@@ -215,7 +215,11 @@
 
             socket.on(`${device_token}`, (events) => {
 
-                document.getElementById('message').innerHTML = events.data ? events.data.message.message : 'Aguarde...';
+                console.log("Events socket", events);
+
+                if(events?.data.message?.message){
+                    document.getElementById('message').innerHTML = events?.data.message?.message ? events?.data.message?.message : 'Aguarde...';
+                }
 
                 if (events.data.wook == 'QRCODE') {
 

@@ -14,7 +14,7 @@
                     <div class="app-card app-card-stat shadow-sm h-100">
                         <div class="app-card-body p-3 p-lg-4">
                             <h4 class="stats-type mb-1">Mensagens</h4>
-                            <div class="stats-figure">{{ isset($mensagens) ? count($mensagens) : 0 }}</div>
+                            <div class="stats-figure">{{ isset($mensagens) ? $mensagens : 0 }}</div>
                             <div class="stats-meta text-success">
                                 <i class="fas fa-calculator"></i> Total
                             </div>
@@ -27,7 +27,7 @@
                     <div class="app-card app-card-stat shadow-sm h-100">
                         <div class="app-card-body p-3 p-lg-4">
                             <h4 class="stats-type mb-1">Mensagens</h4>
-                            <div class="stats-figure">{{ isset($mensagensPendentes) ? count($mensagensPendentes) : 0 }}</div>
+                            <div class="stats-figure">{{ isset($mensagensPendentes) ? $mensagensPendentes : 0 }}</div>
                             <div class="stats-meta text-danger">
                                 <i class="fas fa-clock"></i> Pendentes
                             </div>
@@ -40,7 +40,7 @@
                     <div class="app-card app-card-stat shadow-sm h-100">
                         <div class="app-card-body p-3 p-lg-4">
                             <h4 class="stats-type mb-1">Mensagens</h4>
-                            <div class="stats-figure">{{ isset($mensagensEnviadas) ? count($mensagensEnviadas) : 0 }}</div>
+                            <div class="stats-figure">{{ isset($mensagensEnviadas) ? $mensagensEnviadas : 0 }}</div>
                             <div class="stats-meta text-success">
                                 <i class="fas fa-arrow-up"></i> Enviadas
                             </div>
@@ -53,7 +53,7 @@
                     <div class="app-card app-card-stat shadow-sm h-100">
                         <div class="app-card-body p-3 p-lg-4">
                             <h4 class="stats-type mb-1">Mensagens</h4>
-                            <div class="stats-figure">{{ isset($messagensError) ? count($messagensError) : 0 }}</div>
+                            <div class="stats-figure">{{ isset($messagensError) ? $messagensError : 0 }}</div>
                             <div class="stats-meta text-danger">
                                 <i class="fas fa-times"></i> Erros
                             </div>
@@ -148,7 +148,7 @@
                 {
                     targets: 5,
                     render: function (data, type, row) {
-                        return data == 'pending' ? '<span class="badge bg-warning">Pendente</span>' : data == 'sent' ? '<span class="badge bg-success">Enviado</span>' : '<span class="badge bg-danger">Erro</span>';
+                        return data == 'pending' ? '<span class="badge bg-warning">Pendente</span>' : data == 'sent' ? '<span class="badge bg-success">Enviado</span>' : `<span class="badge bg-danger" title="${row.log}">Erro</span>`;
                     }
                 }
             ]
