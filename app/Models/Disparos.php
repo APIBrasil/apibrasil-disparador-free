@@ -67,19 +67,19 @@ class Disparos extends Model
     }
 
     public function getTemplates()
-    {
-        $templates = explode(',', $this->templates_id);
-        $templates_name = [];
-
-        foreach ($templates as $template_id) {
-            $template = Templates::find(trim($template_id));
-
-            if ($template) {
-                $templates_name[] = $template->name;
-            }
-        }
-
-        return implode(', ', $templates_name);
+{
+    // Check if templates_id is null or empty
+    if (is_null($this->templates_id) || trim($this->templates_id) === '') {
+        return collect([]);
     }
+
+    // Split the comma-separated IDs into an array
+    $templateIds = explode(',', $this->templates_id);
+
+    // Fetch the templates matching the IDs
+    $templates = Templates::whereIn('id', $templateIds)->get();
+
+    return $templates;
+}
 
 }
