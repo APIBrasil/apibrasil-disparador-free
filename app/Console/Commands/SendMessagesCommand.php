@@ -39,6 +39,8 @@ class SendMessagesCommand extends Command
             $token = $user->bearer_token_api_brasil;
             $devicesOnline = Dispositivos::online($user->id);
 
+            dd($devicesOnline);
+
             if (count($devicesOnline) == 0) {
                 echo "No devices online for user {$user->name}\n";
                 continue;
