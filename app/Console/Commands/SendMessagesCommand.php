@@ -37,14 +37,13 @@ class SendMessagesCommand extends Command
 
             // dd($user->bearer_token_api_brasil);
             $token = $user->bearer_token_api_brasil;
-            $devices_online = Dispositivos::online($user->id);
+            $devicesOnline = Dispositivos::online($user->id);
 
-            if (count($devices_online) == 0) {
+            if (count($devicesOnline) == 0) {
                 echo "No devices online for user {$user->name}\n";
                 continue;
             }
 
-            $random_device = $devices_online[array_rand($devices_online)];
             $messagesPending = $disparos->messagesPending;
 
             if (count($messagesPending) == 0) {
@@ -56,7 +55,15 @@ class SendMessagesCommand extends Command
 
             foreach ($messagesPending as $message) {
 
+                if ($disparos->status == 'paused') {
+                    echo "Dispatch paused, waiting for user action\n";
+                    break;
+                }
+
                 $messageParsed = $this->parseMessage($message);
+                $randomDevice = $devicesOnline[array_rand($devicesOnline)];
+
+                echo "Usando o dispositivo {$randomDevice->device_token}\n";
 
                 switch ($disparos->mode) {
                     case 'agressive':
@@ -91,20 +98,19 @@ class SendMessagesCommand extends Command
 
                     $sendText = Service::WhatsApp("sendText", [
                         "Bearer" => $token,
-                        "DeviceToken" => $random_device->device_token,
+                        "DeviceToken" => $randomDevice->device_token,
                         "body" => [
                             "number" => $message->contato->number,
                             "text" => $messageParsed
                         ]
                     ]);
 
-                    if (!$sendText or !isset($sendText->response->result) or $sendText->response->result != 200) {
+                    if (!isset($sendText->response->result) or $sendText->response->result != 200) {
                         $message->status = 'error';
                         $message->log = json_encode($sendText);
                         $message->save();
                         continue;
                     }
-                                        
 
                     $message->status = 'sent';
                     $message->send_at = now();
@@ -116,7 +122,7 @@ class SendMessagesCommand extends Command
 
                     $sendFile = Service::WhatsApp("sendFile", [
                         "Bearer" => $token,
-                        "DeviceToken" => $random_device->device_token,
+                        "DeviceToken" => $randomDevice->device_token,
                         "body" => [
                             "number" => $message->contato->number,
                             "path" => $message->template->path,
@@ -128,7 +134,7 @@ class SendMessagesCommand extends Command
                         ]
                     ]);
 
-                    if (!$sendFile or !isset($sendFile->response->result) or $sendFile->response->result != 200) {
+                    if (!isset($sendFile->response->result) or $sendFile->response->result != 200) {
                         $message->status = 'error';
                         $message->log = json_encode($sendFile);
                         $message->save();
