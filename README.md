@@ -3,7 +3,10 @@
 A ideia desse software, é servir como base para outros programadores implementarem suas integrações com o WhatsApp 
 
 [![Star on GitHub](https://img.shields.io/github/stars/APIBrasil/apibrasil-disparador-free.svg?style=social)](https://github.com/APIBrasil/apibrasil-disparador-free/stargazers)
+<a href="https://github.com/jhowbhz/apigratis-sdk-php/network" target="_blank"><img alt="GitHub forks" src="https://img.shields.io/github/forks/APIbrasil/apibrasil-disparador-free"></a>
+<a href="https://github.com/APIbrasil/apibrasil-disparador-free/issues" target="_blank"><img alt="GitHub issues" src="https://img.shields.io/github/issues/APIbrasil/apibrasil-disparador-free"></a>
 [![GitHub tag](https://img.shields.io/github/tag/APIbrasil/apibrasil-disparador-free)](https://github.com/APIbrasil/apibrasil-disparador-free/releases/?include_prereleases&sort=semver "View GitHub releases")
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.3-8892BF.svg?style=flat-square)](https://php.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](#license "Go to license section")
 [![Known Vulnerabilities](https://snyk.io/test/github/APIbrasil/badge-generator/badge.svg?targetFile=package.json)](https://snyk.io/test/github/APIbrasil/apibrasil-disparador-free?targetFile=package.json "APIBrasil vulnerabilities")
 
