@@ -2,6 +2,11 @@
 
 A ideia desse software, é servir como base para outros programadores implementarem suas integrações com o WhatsApp 
 
+[![Star on GitHub](https://img.shields.io/github/stars/APIBrasil/apibrasil-disparador-free.svg?style=social)](https://github.com/APIBrasil/apibrasil-disparador-free/stargazers)
+[![GitHub tag](https://img.shields.io/github/tag/APIbrasil/apibrasil-disparador-free)](https://github.com/APIbrasil/apibrasil-disparador-free/releases/?include_prereleases&sort=semver "View GitHub releases")
+[![License](https://img.shields.io/badge/License-MIT-blue)](#license "Go to license section")
+[![Known Vulnerabilities](https://snyk.io/test/github/APIbrasil/badge-generator/badge.svg?targetFile=package.json)](https://snyk.io/test/github/APIbrasil/apibrasil-disparador-free?targetFile=package.json "APIBrasil vulnerabilities")
+
 ### Requisitos
 Você irá precisar de uma conta com um plano ativo na plataforma APIBrasil para utilizar e cadastrar os dispostivos
 
