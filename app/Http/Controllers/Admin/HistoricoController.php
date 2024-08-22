@@ -17,25 +17,29 @@ class HistoricoController extends Controller
     public function index()
     {
 
+        $mensagens = Mensagens::select('id', 'user_id')
+        ->where('user_id', Auth::id())
+        ->count();
 
-        $mensagensEnviadas = Mensagens::orderBy('id', 'desc')
+        $mensagensEnviadas = Mensagens::select('id', 'user_id')
         ->where('user_id', Auth::id())
         ->where('status', 'sent')
-        ->get();
+        ->count();
 
-        $mensagensPendentes = Mensagens::orderBy('id', 'desc')
+        $mensagensPendentes = Mensagens::select('id', 'user_id')
         ->where('user_id', Auth::id())
         ->where('status', 'pending')
-        ->get();
+        ->count();
 
-        $messagensError = Mensagens::orderBy('id', 'desc')
+        $messagensError = Mensagens::select('id', 'user_id')
         ->where('user_id', Auth::id())
         ->where('status', 'error')
-        ->get();
+        ->count();
 
         return view('admin.historico')
         ->with('mensagensEnviadas', $mensagensEnviadas)
         ->with('mensagensPendentes', $mensagensPendentes)
+        ->with('mensagens', $mensagens)
         ->with('messagensError', $messagensError);
     }
 
