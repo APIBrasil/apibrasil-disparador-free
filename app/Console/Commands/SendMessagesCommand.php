@@ -101,6 +101,12 @@ class SendMessagesCommand extends Command
                             ]
                         ]);
 
+                        //get status $sendText->error == true
+                        if ($sendText->error == true) {
+                            dd($sendText);
+
+                        }
+
                     } catch (\GuzzleHttp\Exception\RequestException $th) {
 
                         echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
