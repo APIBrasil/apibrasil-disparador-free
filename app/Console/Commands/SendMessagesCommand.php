@@ -101,7 +101,7 @@ class SendMessagesCommand extends Command
                             ]
                         ]);
 
-                    } catch (\Throwable $th) {
+                    } catch (\GuzzleHttp\Exception\RequestException $th) {
 
                         echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
                         $disparos->status = 'cancelled';
@@ -142,7 +142,7 @@ class SendMessagesCommand extends Command
                             ]
                         ]);
                         
-                    } catch (\Throwable $th) {
+                    } catch (\GuzzleHttp\Exception\RequestException $th) {
 
                         echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
                         $disparos->status = 'cancelled';
