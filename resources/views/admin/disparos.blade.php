@@ -178,7 +178,7 @@
                     targets: 3,
                     render: function (data, type, row) {
                         return data.map(template => {
-                            return `<span class="badge bg-primary">${template.name}</span>`;
+                            return `<span class="badge bg-primary">${template.name ?? ''}</span>`;
                         }).join(' ');
                     },
                 },

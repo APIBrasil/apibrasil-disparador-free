@@ -61,21 +61,23 @@ class SendMessagesCommand extends Command
                 switch ($disparos->mode) {
                     case 'agressive':
                         $random = rand(1, 10);
-                        $sleep = rand(1, 2);
+                        $sleep = rand(10, 30);
                         break;
                     case 'normal':
                         $random = rand(1, 5);
-                        $sleep = rand(5, 60);
+                        $sleep = rand(60, 120);
                         break;
                     case 'slow':
                         $random = rand(1, 2);
-                        $sleep = rand(60, 120);
+                        $sleep = rand(120, 240);
                         break;
                     default:
-                        $random = rand(1, 10);
-                        $sleep = rand(1, 2);
+                        $random = rand(1, 5);
+                        $sleep = rand(60, 120);
                         break;
                 }
+
+                $qt_disparo++;
 
                 echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
 
@@ -103,7 +105,6 @@ class SendMessagesCommand extends Command
                         continue;
                     }
                                         
-                    $qt_disparo++;
 
                     $message->status = 'sent';
                     $message->send_at = now();
