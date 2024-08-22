@@ -101,11 +101,7 @@ class SendMessagesCommand extends Command
                             ]
                         ]);
 
-                        //get status $sendText->error == true
-                        if ($sendText->error == true) {
-                            dd($sendText);
-
-                        }
+                        dd($sendText);
 
                     } catch (\GuzzleHttp\Exception\RequestException $th) {
 
