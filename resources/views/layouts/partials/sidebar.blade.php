@@ -92,11 +92,11 @@
 
                     <li class="nav-item">
                         
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="https://github.com/APIBrasil/apibrasil-dispador-free">
                             <span class="nav-icon">
-                               <i class="fas fa-book fa-lg"></i>
+                               <i class="fab fa-github fa-lg"></i>
                             </span>
-                            <span class="nav-link-text">Documentação</span>
+                            <span class="nav-link-text">Baixe no GitHub</span>
                         </a>
                     </li>
 
