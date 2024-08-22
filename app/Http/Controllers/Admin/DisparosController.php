@@ -36,6 +36,10 @@ class DisparosController extends Controller
     {
 
         $disparos = Disparos::orderBy('id', 'desc')
+        ->with('tag')
+        ->with('templates')
+        ->withCount('messagesPending')
+        ->withCount('messagesSent')
         ->where('user_id', Auth::user()->id)
         ->get();
 

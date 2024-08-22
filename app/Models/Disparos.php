@@ -52,6 +52,12 @@ class Disparos extends Model
         ->with('tag');
     }
 
+    //templates
+    public function templates()
+    {
+        return $this->hasMany(Templates::class, 'id', 'templates_id');
+    }
+
     public function messagesSent()
     {
         return $this->hasMany(Mensagens::class, 'disparo_id', 'id')
