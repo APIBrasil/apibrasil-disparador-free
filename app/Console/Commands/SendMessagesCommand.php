@@ -35,11 +35,13 @@ class SendMessagesCommand extends Command
 
             $user = User::find($disparos->user_id);
 
+            echo "Disparo: {$disparos->id} - User: {$user->name}\n";
+
             // dd($user->bearer_token_api_brasil);
             $token = $user->bearer_token_api_brasil;
             $devicesOnline = Dispositivos::online($user->id);
 
-            dd($devicesOnline);
+            // dd($devicesOnline);
 
             if (count($devicesOnline) == 0) {
                 echo "No devices online for user {$user->name}\n";
@@ -98,14 +100,26 @@ class SendMessagesCommand extends Command
 
                 if($message->template->type == 'text') {
 
-                    $sendText = Service::WhatsApp("sendText", [
-                        "Bearer" => $token,
-                        "DeviceToken" => $randomDevice->device_token,
-                        "body" => [
-                            "number" => $message->contato->number,
-                            "text" => $messageParsed
-                        ]
-                    ]);
+                    try {
+
+                        $sendText = Service::WhatsApp("sendText", [
+                            "Bearer" => $token,
+                            "DeviceToken" => $randomDevice->device_token,
+                            "body" => [
+                                "number" => $message->contato->number,
+                                "text" => $messageParsed
+                            ]
+                        ]);
+
+                    } catch (\Throwable $th) {
+
+                        echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
+                        $disparos->status = 'cancelled';
+                        $disparos->save();
+
+                        continue;
+                        
+                    }
 
                     if (!isset($sendText->response->result) or $sendText->response->result != 200) {
                         $message->status = 'error';
