@@ -59,6 +59,8 @@ class SendMessagesCommand extends Command
 
             foreach ($messagesPending as $message) {
 
+                $qt_disparo++;
+
                 if ($disparos->status == 'paused') {
                     echo "Dispatch paused, waiting for user action\n";
                     break;
@@ -166,8 +168,6 @@ class SendMessagesCommand extends Command
 
                 }
                 
-                $qt_disparo++;
-
                 echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
 
                 if ($qt_disparo >= $random) {
