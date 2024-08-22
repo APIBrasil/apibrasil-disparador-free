@@ -7,6 +7,11 @@ A ideia desse software, é servir como base para outros programadores implementa
 [![License](https://img.shields.io/badge/License-MIT-blue)](#license "Go to license section")
 [![Known Vulnerabilities](https://snyk.io/test/github/APIbrasil/badge-generator/badge.svg?targetFile=package.json)](https://snyk.io/test/github/APIbrasil/apibrasil-disparador-free?targetFile=package.json "APIBrasil vulnerabilities")
 
+### Demonstração
+Para utilizar a demonstração você precisa de uma conta ativa na APIBrasil
+
+https://app.notificazap.com.br
+
 ### Requisitos
 - Ubuntu 22.04 ou superior
 - 2vCPU / 2GB RAM / 20G Disco
