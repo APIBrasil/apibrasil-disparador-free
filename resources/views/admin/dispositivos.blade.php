@@ -215,7 +215,11 @@
 
             socket.on(`${device_token}`, (events) => {
 
-                document.getElementById('message').innerHTML = events.data ? events.data.message.message : 'Aguarde...';
+                console.log("Events socket", events);
+
+                if(events?.data.message?.message){
+                    document.getElementById('message').innerHTML = events?.data.message?.message ? events?.data.message?.message : 'Aguarde...';
+                }
 
                 if (events.data.wook == 'QRCODE') {
 
