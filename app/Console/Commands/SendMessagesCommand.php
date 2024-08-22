@@ -117,7 +117,7 @@ class SendMessagesCommand extends Command
                         $disparos->status = 'cancelled';
                         $disparos->save();
 
-                        continue;
+                        return;
                         
                     }
 
@@ -136,20 +136,31 @@ class SendMessagesCommand extends Command
 
                 if( $message->template->type == 'file' or $message->template->type == 'image' ) {
 
-                    $sendFile = Service::WhatsApp("sendFile", [
-                        "Bearer" => $token,
-                        "DeviceToken" => $randomDevice->device_token,
-                        "body" => [
-                            "number" => $message->contato->number,
-                            "path" => $message->template->path,
-                            "options" => [
-                                "caption" => $messageParsed,
-                                "createChat" > true,
-                                "filename" => basename($message->template->path)
-                            ]
-                        ]
-                    ]);
+                    try {
 
+                        $sendFile = Service::WhatsApp("sendFile", [
+                            "Bearer" => $token,
+                            "DeviceToken" => $randomDevice->device_token,
+                            "body" => [
+                                "number" => $message->contato->number,
+                                "path" => $message->template->path,
+                                "options" => [
+                                    "caption" => $messageParsed,
+                                    "createChat" > true,
+                                    "filename" => basename($message->template->path)
+                                ]
+                            ]
+                        ]);
+                        
+                    } catch (\Throwable $th) {
+
+                        echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
+                        $disparos->status = 'cancelled';
+                        $disparos->save();
+
+                        return;
+                        
+                    }
                     if (!isset($sendFile->response->result) or $sendFile->response->result != 200) {
                         $message->status = 'error';
                         $message->log = json_encode($sendFile);
