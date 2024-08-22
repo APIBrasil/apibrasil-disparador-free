@@ -88,16 +88,6 @@ class SendMessagesCommand extends Command
                         break;
                 }
 
-                $qt_disparo++;
-
-                echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
-
-                if ($qt_disparo >= $random) {
-                    echo "Limit of {$random} messages reached, waiting {$sleep} seconds\n";
-                    $qt_disparo = 0;
-                    sleep($sleep);
-                }
-
                 if($message->template->type == 'text') {
 
                     try {
@@ -174,6 +164,16 @@ class SendMessagesCommand extends Command
                     $message->send_at = now();
                     $message->save();
 
+                }
+                
+                $qt_disparo++;
+
+                echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
+
+                if ($qt_disparo >= $random) {
+                    echo "Limit of {$random} messages reached, waiting {$sleep} seconds\n";
+                    $qt_disparo = 0;
+                    sleep($sleep);
                 }
 
             }
