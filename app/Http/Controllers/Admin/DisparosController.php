@@ -9,15 +9,13 @@ use App\Models\Templates;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class DisparosController extends Controller
 {
     
     public function index()
     {
-        $disparos = Disparos::orderBy('id', 'desc')
-        ->where('user_id', Auth::user()->id)
-        ->get();
         
         $templates = Templates::orderBy('id', 'desc')
         ->where('status', 'active')
@@ -30,9 +28,23 @@ class DisparosController extends Controller
         ->get();
 
         return view('admin.disparos')
-        ->with('disparos', $disparos)
         ->with('templates', $templates)
         ->with('tags', $tags);
+    }
+
+    public function datatables()
+    {
+
+        $disparos = Disparos::orderBy('id', 'desc')
+        ->with('tag')
+        ->with('templates')
+        ->withCount('messagesPending')
+        ->withCount('messagesSent')
+        ->where('user_id', Auth::user()->id)
+        ->get();
+
+        return DataTables::of($disparos)->make(true);
+        
     }
 
     public function store(Request $request)

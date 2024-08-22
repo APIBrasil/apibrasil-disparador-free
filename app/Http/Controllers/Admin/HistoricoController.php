@@ -47,7 +47,7 @@ class HistoricoController extends Controller
         ->with(['contato' => function($query){
             $query->select('id', 'number'); // Include 'id' to avoid issues with missing columns
         }, 'tag' => function($query){
-            $query->select('id', 'name'); // Include 'id' to avoid issues with missing columns
+            $query->select('id', 'color', 'name'); // Include 'id' to avoid issues with missing columns
         }])
         ->with('template', function($query){
             $query->select('id', 'name'); // Include 'id' to avoid issues with missing columns

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Tags;
 use App\Models\Contatos;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Jobs\UploadContactsJob;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class ContatosController extends Controller
@@ -15,19 +16,27 @@ class ContatosController extends Controller
 
     public function index()
     {
-        $contatos = Contatos::where('user_id', Auth::user()->id)
-        ->orderBy('id', 'desc')
-        ->get();
-
+        
         $tags = Tags::orderBy('id', 'desc')
         ->where('status', 'active')
         ->where('user_id', Auth::user()->id)
         ->get();
 
         return view('admin.contatos')
-        ->with('contatos', $contatos)
         ->with('tags', $tags);
 
+    }
+
+    public function datatables()
+    {
+
+        $contatos = Contatos::where('user_id', Auth::user()->id)
+        ->with('tag')
+        ->orderBy('id', 'desc')
+        ->get();
+
+        return DataTables::of($contatos)->make(true);
+        
     }
 
     public function store(Request $request)

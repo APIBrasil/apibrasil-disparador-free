@@ -120,6 +120,12 @@
             ],
             columnDefs: [
                 {
+                    targets: 1,
+                    render: function (data, type, row) {
+                        return `<span class="badge" style="background-color: ${row.tag.color}"> ${row.tag.name}</span>`;
+                    },
+                },
+                {
                     targets: 3,
                     render: function (data, type, row) {
                         return moment(data).format('DD/MM/YY HH:mm');

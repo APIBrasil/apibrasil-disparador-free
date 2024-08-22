@@ -22,13 +22,11 @@ class SeedCreateFirstUser extends Command
             return 1;
         }
 
-        // Verifica se o usuário já existe
         if (User::where('email', $email)->exists()) {
             $this->error('Usuário com este email já existe.');
             return 1;
         }
 
-        // Cria o usuário
         User::create([
             'name' => 'Admin',
             'email' => $email,

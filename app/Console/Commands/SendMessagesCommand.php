@@ -45,16 +45,16 @@ class SendMessagesCommand extends Command
             }
 
             $random_device = $devices_online[array_rand($devices_online)];
-            $messages_pending = $disparos->messagesPending;
+            $messagesPending = $disparos->messagesPending;
 
-            if (count($messages_pending) == 0) {
+            if (count($messagesPending) == 0) {
                 echo "No messages pending for user {$user->name}\n";
                 continue;
             }
 
             $qt_disparo = 0;
 
-            foreach ($messages_pending as $message) {
+            foreach ($messagesPending as $message) {
 
                 $messageParsed = $this->parseMessage($message);
 
@@ -86,6 +86,7 @@ class SendMessagesCommand extends Command
                 }
 
                 if($message->template->type == 'text') {
+
                     $sendText = Service::WhatsApp("sendText", [
                         "Bearer" => $token,
                         "DeviceToken" => $random_device->device_token,
@@ -95,20 +96,22 @@ class SendMessagesCommand extends Command
                         ]
                     ]);
 
-                    if(!isset($sendText->response->result)) {
+                    if (!$sendText or !isset($sendText->response->result) or $sendText->response->result != 200) {
                         $message->status = 'error';
+                        $message->log = json_encode($sendText);
                         $message->save();
                         continue;
                     }
-    
-                    if (!$sendText or $sendText->response->result != 200) {
-                        $message->status = 'error';
-                        $message->save();
-                        continue;
-                    }
+                                        
+                    $qt_disparo++;
+
+                    $message->status = 'sent';
+                    $message->send_at = now();
+                    $message->save();
+                    
                 }
 
-                if($message->template->type == 'image') {
+                if( $message->template->type == 'file' or $message->template->type == 'image' ) {
 
                     $sendFile = Service::WhatsApp("sendFile", [
                         "Bearer" => $token,
@@ -124,57 +127,25 @@ class SendMessagesCommand extends Command
                         ]
                     ]);
 
-                    if(!isset($sendFile->response->result)) {
+                    if (!$sendFile or !isset($sendFile->response->result) or $sendFile->response->result != 200) {
                         $message->status = 'error';
+                        $message->log = json_encode($sendFile);
                         $message->save();
                         continue;
                     }
+                    
+                    $qt_disparo++;
 
-                    if (!$sendFile or $sendFile->response->result != 200) {
-                        $message->status = 'error';
-                        $message->save();
-                        continue;
-                    }
+                    $message->status = 'sent';
+                    $message->send_at = now();
+                    $message->save();
 
                 }
-
-                if($message->template->type == 'file') {
-
-                    $sendFile = Service::WhatsApp("sendFile", [
-                        "Bearer" => $token,
-                        "DeviceToken" => $random_device->device_token,
-                        "body" => [
-                            "number" => $message->contato->number,
-                            "path" => $message->template->path,
-                            "options" => [
-                                "caption" => $messageParsed,
-                                "createChat" > true,
-                                "filename" => basename($message->template->path)
-                            ]
-                        ]
-                    ]);
-
-                    if(!isset($sendFile->response->result)) {
-                        $message->status = 'error';
-                        $message->save();
-                        continue;
-                    }
-
-                    if (!$sendFile or $sendFile->response->result != 200) {
-                        $message->status = 'error';
-                        $message->save();
-                        continue;
-                    }
-
-                }
-
-                $qt_disparo++;
-
-                $message->status = 'sent';
-                $message->send_at = now();
-                $message->save();
 
             }
+
+            $disparos->status = 'finish';
+            $disparos->save();
 
         }
     }

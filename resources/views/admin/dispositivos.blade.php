@@ -28,67 +28,6 @@
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                        @foreach($dispositivos as $item)
-
-                        <tr>
-
-                            <th scope="row">
-                                {{ $item->device_name }}
-                            </th>
-                            <td>
-                                {{ $item->device_token }}
-                            </td>
-                            <td>
-                                {{ $item->number_device ?? '' }}
-                            </td>
-                            <td>
-                                {{ $item->service->name }}
-                            </td>
-                            <td>
-                                {{ Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                            </td>
-                            <td>
-
-                                @switch($item->status)
-                                    @case('CONNECTED')
-                                    @case('inChat')
-                                    <span class="badge bg-success">{{ $item->status }}</span>
-                                    @break
-                                    @case('DISCONNECTED')
-                                    @case('close')
-                                    <span class="badge bg-danger">{{ $item->status }}</span>
-                                    @break
-                                    @case('browserClose')
-                                    <span class="badge bg-danger">browserClose</span>
-                                    @break
-                                    @case('refused')
-                                    <span class="badge bg-danger">refused</span>
-                                    @break
-                                    @default
-                                    <span class="badge bg-warning">{{ $item->status }}</span>
-                                @endswitch
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-primary text-white" onclick="getItems('{{ $item->search }}')"><i class="fas fa-edit"></i></a>
-                                
-                                @switch($item->status)
-                                    @case('DISCONNECTED')
-                                    @case('close')
-                                    @case('browserClose')
-                                    @case('refused')
-                                    @case('notLogged')
-                                    @case('autocloseCalled')
-                                    <a href="#" class="btn btn-sm btn-info text-white" onclick="startDevice('{{ $item->device_token }}')"><i class="fas fa-qrcode"></i></a>
-                                    @break
-                                @endswitch
-
-                                <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem('{{ $item->search }}')"><i class="fas fa-trash"></i></a>
-                        </tr>
-                        @endforeach
-                        
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -187,7 +126,78 @@
         let profile_id = document.querySelector('meta[name="profile_id"]').getAttribute('content');
 
         let table = new DataTable('#table', {
-            responsive: true
+            responsive: true,
+            ajax: '/dispositivos/datatables',
+            lengthChange: true,
+            autoFill: true,
+            select: {
+                style: 'multi'
+            },
+            processing: false,
+            deferRender: true,
+            cache: true,
+            destroy: true,
+            serverSide: false,
+            stateSave: true,
+            searchDelay: 350,
+            search: {
+                "smart": true,
+                "caseInsensitive": false
+            },
+            columns: 
+            [
+                { data: 'device_name', name: 'device_name' },
+                { data: 'device_token', name: 'device_token' },
+                { data: 'number_device', name: 'number_device' },
+                { data: 'service.name', name: 'service.name' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'status', name: 'status' },
+                { data: 'actions', name: 'actions' }
+            ],
+            columnDefs:
+            [
+                {
+                    targets: 5,
+                    render: function (data, type, row) {
+                       
+                        switch (data) {
+                            case 'inChat':
+                            case 'CONNECTED':
+                                return `<span class="badge bg-success">${data}</span>`;
+                                break;
+                            case 'browserClose':
+                                return `<span class="badge bg-danger">${data}</span>`;
+                                break;
+                            default:
+                                return `<span class="badge bg-warning">${data}</span>`;
+                                break;
+                        }
+
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row) {
+                        return moment(data).format('DD/MM/YY HH:mm');
+                    }
+                },
+                {
+                    targets: 6,
+                    render: function (data, type, row) {
+                        let btnEdit= `<button class="btn btn-primary" onclick="getItems(${row.id})"><i class="fa fa-edit"></i></button>`;
+    
+                        let btnStart = `<button class="btn btn-success" onclick="startDevice('${row.device_token}')"><i class="fa fa-qrcode"></i></button>`;
+                        if(row.status == 'inChat' || row.status == 'CONNECTED' || row.status == 'open') {
+                            btnStart = "";
+                        }
+                     
+                        let btnDelete = `<button class="btn btn-danger" onclick="deleteItem(${row.id})"><i class="fa fa-trash"></i></button>`;
+
+                        return `${btnEdit} ${btnStart} ${btnDelete}`;
+                    }
+                }
+            ]
+
         });
 
         const startDevice = (device_token) => {
@@ -205,15 +215,7 @@
 
             socket.on(`${device_token}`, (events) => {
 
-                // console.log(events);
-
-                if (events.message) {
-                    document.getElementById('message').innerHTML = events.message.message;
-                }
-
-                if (events.data.message) {
-                    document.getElementById('message').innerHTML = events.message.message;
-                }
+                document.getElementById('message').innerHTML = events?.data?.message?.message ? events.data.message.message : 'Aguarde...';
 
                 if (events.data.wook == 'QRCODE') {
 
@@ -221,7 +223,7 @@
                     let image = document.createElement('img');
 
                     image.src = base64;
-                    image.className = 'w-50';
+                    image.className = 'w-100';
 
                     document.querySelector('#modalQR .modal-body').innerHTML = '';
                     document.querySelector('#modalQR .modal-body').appendChild(image);

@@ -11,6 +11,7 @@ use App\Models\Dispositivos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 use GuzzleHttp\Psr7\Request as RequestGuzzle;
 
 class DispositivosController extends Controller
@@ -18,13 +19,9 @@ class DispositivosController extends Controller
     public function index()
     {
 
-        $dispositivos = Dispositivos::getAll();
         $servidores = Servidores::getAll();
         $apis = API::getAll();
 
-        $dispositivos = array_filter($dispositivos, function($dispositivo) {
-            return $dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet';
-        });
 
         $apis = array_filter($apis, function($api) {
             return $api->type == 'whatsapp' or $api->type == 'baileys';
@@ -36,8 +33,21 @@ class DispositivosController extends Controller
 
         return view('admin.dispositivos')
         ->with('servidores', $servidores)
-        ->with('apis', $apis)
-        ->with('dispositivos', $dispositivos);
+        ->with('apis', $apis);
+    }
+
+    public function datatables()
+    {
+
+        $dispositivos = Dispositivos::getAll();
+        
+        $dispositivos = array_filter($dispositivos, function($dispositivo) {
+            return $dispositivo->type == 'cellphone' or $dispositivo->type == 'tablet';
+        });
+
+
+        return DataTables::of($dispositivos)->make(true);
+        
     }
 
     public function start(string $device_token)

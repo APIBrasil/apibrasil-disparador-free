@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use GuzzleHttp\Client;
+use ApiBrasil\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use GuzzleHttp\Psr7\Request as RequestGuzzle;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Servidores extends Model
 {
@@ -17,18 +16,14 @@ class Servidores extends Model
     {
         try {
             
-            $client = new Client(['http_errors' => false, 'verify' => false]);	
             $token = Auth::user()->bearer_token_api_brasil;
 
-            $request = new RequestGuzzle('GET', env("API_URL").'/v2/servers', [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $token
+            $servers = Service::Server("", [
+                "Bearer" => $token,
+                "method" => "GET",
             ]);
 
-            $res = $client->sendAsync($request)->wait();
-            $response = json_decode($res->getBody()->getContents());
-
-            return $response;
+            return $servers;
 
         } catch (\GuzzleHttp\Exception\GuzzleException $th) {
             return response()->json(['error' => $th->getMessage()]);

@@ -28,34 +28,6 @@
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                            @foreach ($disparos as $disparo)
-                            <tr>
-                                <th scope="row"> {{ $disparo->name ?? "" }} </th>
-                                <td> {{ $disparo->description ?? ""}} </td>
-                                <td>
-                                    <span class="badge" style="background: {{ $disparo->tag->color }}">{{ $disparo->tag->name }}</span>
-                                </td>
-                                <td> {{ $disparo->getTemplates() }} </td>
-                                <td> {{ $disparo->messagesPending->count() ?? ""}} </td>
-                                <td> {{ $disparo->messagesSent->count() ?? ""}} </td>
-                                <td style="color: {{ $disparo->mode == 'agressive' ? 'red' : 'black' }};width: 150px">
-                                    @if ($disparo->mode == 'normal')
-                                        Normal
-                                    @elseif ($disparo->mode == 'slow')
-                                        Lento
-                                    @else
-                                        Agressivo ⚠️
-                                    @endif
-                                <td>
-                                <a href="#" class="btn btn-primary text-white" onclick="getItems({{ $disparo->id }})"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem({{ $disparo->id }})"><i class="fas fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            @endforeach
-                       
-                        </tbody>
                     </table>
 
                 </div>
@@ -165,7 +137,74 @@
     <script>
 
         let table = new DataTable('#table', {
-            responsive: true
+            responsive: true,
+            ajax: '/disparos/datatables',
+            lengthChange: true,
+            autoFill: true,
+            select: {
+                style: 'multi'
+            },
+            processing: false,
+            deferRender: true,
+            cache: true,
+            destroy: true,
+            serverSide: false,
+            stateSave: true,
+            searchDelay: 350,
+            search: {
+                "smart": true,
+                "caseInsensitive": false
+            },
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'description', name: 'description' },
+                { data: 'tag.name', name: 'tag.name' },
+                { data: 'templates', name: 'templates' },
+                { data: 'messages_pending_count', name: 'messages_pending_count' },
+                { data: 'messages_sent_count', name: 'messages_sent_count' },
+                { data: 'mode', name: 'mode' },
+                { data: 'actions', name: 'actions' },
+            ],
+
+            columnDefs: [
+                {
+                    targets: 2,
+                    render: function (data, type, row) {
+                        return `<span class="badge" style="background-color: ${row.tag.color}"> ${row.tag.name}</span>`;
+                    },
+                },
+
+                {
+                    targets: 3,
+                    render: function (data, type, row) {
+                        return data.map(template => {
+                            return `<span class="badge bg-primary">${template.name}</span>`;
+                        }).join(' ');
+                    },
+                },
+
+                {
+                    targets: 6,
+                    render: function (data, type, row) {
+                        if (data == 'normal') {
+                            return `<span class="badge bg-primary">Normal</span>`;
+                        } else if (data == 'slow') {
+                            return `<span class="badge bg-success">Lento</span>`;
+                        } else {
+                            return `<span class="badge bg-danger">Agressivo</span>`;
+                        }
+                    },
+                },
+
+                {
+                    targets: 7,
+                    render: function (data, type, row) {
+                        return `<button class="btn btn-sm btn-primary" onclick="getItems(${row.id})"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteItem(${row.id})"><i class="fas fa-trash"></i></button>`;
+                    },
+                },
+            ]
+
         });
 
         const getItems = (id) => {

@@ -16,6 +16,7 @@ class Mensagens extends Model
         'user_id',
         'disparo_id',
         'send_at',
+        'log',
         'status',
     ];
 

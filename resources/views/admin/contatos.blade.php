@@ -47,25 +47,6 @@
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach ($contatos as $contato)
-                        <tr>
-                            <th scope="row">
-                                <a href="#" onclick="getItems({{ $contato->id }})">{{ $contato->name }}</a>
-                            </th>
-                            <td>
-                                {{ $contato->number }}
-                            </td>
-                            <td>
-                                <span class="badge" style="background: {{ $contato->tag->color }}">{{ $contato->tag->name }}</span>
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-primary text-white" onclick="getItems({{ $contato->id }})"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem({{ $contato->id }})"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
-                        </tbody>
                     </table>
 
                 </div>
@@ -154,9 +135,48 @@
     @section('scripts')
 
     <script>
+    let table = new DataTable('#table', {
+            responsive: true,
+            ajax: '/contatos/datatables',
+            lengthChange: true,
+            autoFill: true,
+            select: {
+                style: 'multi'
+            },
+            processing: false,
+            deferRender: true,
+            cache: true,
+            destroy: true,
+            serverSide: false,
+            stateSave: true,
+            searchDelay: 350,
+            search: {
+                "smart": true,
+                "caseInsensitive": false
+            },
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'number', name: 'number' },
+                { data: 'tag.name', name: 'tag.name' },
+                { data: 'actions', name: 'actions' },
+            ],
+            columnDefs: [
+            {
+                targets: 2,
+                render: function (data, type, row) {
+                    return `<span class="badge" style="background-color: ${row.tag.color}"> ${row.tag.name}</span>`;
+                },
+            },
+            {
 
-        let table = new DataTable('#table', {
-            responsive: true
+                targets: 3,
+                render: function (data, type, row) {
+                    return `
+                        <a href="#" class="btn btn-primary text-white" onclick="getItems(${row.id})"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger text-white" onclick="deleteItem(${row.id})"><i class="fas fa-trash"></i></a>
+                    `;
+                }
+            }]
         });
 
         const uploadItem = () => {
