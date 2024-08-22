@@ -101,10 +101,9 @@ class SendMessagesCommand extends Command
                             ]
                         ]);
 
-                        dd($sendText);
-
                     } catch (\GuzzleHttp\Exception\RequestException $th) {
 
+                        dd($th);
                         echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
                         $disparos->status = 'cancelled';
                         $disparos->save();
