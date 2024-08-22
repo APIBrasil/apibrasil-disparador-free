@@ -34,14 +34,18 @@ class DisparosController extends Controller
 
     public function datatables()
     {
-
         $disparos = Disparos::orderBy('id', 'desc')
+        ->whereNotNull('templates_id')
         ->with('tag')
-        ->with('templates')
         ->withCount('messagesPending')
         ->withCount('messagesSent')
         ->where('user_id', Auth::user()->id)
         ->get();
+        
+        $disparos->each(function($disparo) {
+            $templateIds = explode(',', $disparo->templates_id);
+            $disparo->templates = Templates::whereIn('id', $templateIds)->get();
+        });
 
         return DataTables::of($disparos)->make(true);
         
@@ -137,6 +141,11 @@ class DisparosController extends Controller
     public function destroy(string $id)
     {
         try {
+
+            // Delete all messages
+            Mensagens::where('disparo_id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->delete();
 
             $disparo = Disparos::where('id', $id)
             ->where('user_id', Auth::user()->id)

@@ -163,6 +163,7 @@
                 { data: 'messages_pending_count', name: 'messages_pending_count' },
                 { data: 'messages_sent_count', name: 'messages_sent_count' },
                 { data: 'mode', name: 'mode' },
+                { data: 'status', name: 'status' },
                 { data: 'actions', name: 'actions' },
             ],
 
@@ -177,9 +178,19 @@
                 {
                     targets: 3,
                     render: function (data, type, row) {
-                        return data.map(template => {
-                            return `<span class="badge bg-primary">${template.name}</span>`;
-                        }).join(' ');
+                        
+                        let templates = row.templates;
+                        let template = '';
+
+                        for (let i = 0; i < templates.length; i++) {
+                            template += `<span class="badge bg-primary">${templates[i].name}</span></br>`;
+                        }
+
+                        return template;
+
+                        // return data.map(template => {
+                        //     return `<span class="badge bg-primary">${template.name ?? ''}</span>`;
+                        // }).join(' ');
                     },
                 },
 
@@ -196,8 +207,22 @@
                     },
                 },
 
+                //status
                 {
                     targets: 7,
+                    render: function (data, type, row) {
+                        if (data == 'pending') {
+                            return `<span class="badge bg-warning">Pendente</span>`;
+                        } else if (data == 'paused') {
+                            return `<span class="badge bg-secondary">Pausado</span>`;
+                        } else {
+                            return `<span class="badge bg-success">Finalizado</span>`;
+                        }
+                    },
+                },
+
+                {
+                    targets: 8,
                     render: function (data, type, row) {
                         return `<button class="btn btn-sm btn-primary" onclick="getItems(${row.id})"><i class="fas fa-edit"></i></button>
                                 <button class="btn btn-sm btn-danger" onclick="deleteItem(${row.id})"><i class="fas fa-trash"></i></button>`;

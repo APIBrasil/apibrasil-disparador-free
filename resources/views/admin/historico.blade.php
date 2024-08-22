@@ -74,7 +74,7 @@
                         <tr>
                             <th scope="col">Destino</th>
                             <th scope="col">Tag</th>
-                            <th scope="col">Mensagem</th>
+                            <th scope="col">Template</th>
                             <th scope="col">Criado em</th>
                             <th scope="col">Enviado em</th>
                             <th scope="col">Status</th>
@@ -124,6 +124,14 @@
                     render: function (data, type, row) {
                         return `<span class="badge" style="background-color: ${row.tag.color}"> ${row.tag.name}</span>`;
                     },
+                },
+                {
+                    targets: 2,
+                    render: function (data, type, row) {
+                        
+                        return `<div class="badge bg-secondary">${row.template.name}</div>`;
+                        
+                    }
                 },
                 {
                     targets: 3,
