@@ -35,9 +35,13 @@ class SendMessagesCommand extends Command
 
             $user = User::find($disparos->user_id);
 
+            echo "Disparo: {$disparos->id} - User: {$user->name}\n";
+
             // dd($user->bearer_token_api_brasil);
             $token = $user->bearer_token_api_brasil;
             $devicesOnline = Dispositivos::online($user->id);
+
+            // dd($devicesOnline);
 
             if (count($devicesOnline) == 0) {
                 echo "No devices online for user {$user->name}\n";
@@ -54,6 +58,8 @@ class SendMessagesCommand extends Command
             $qt_disparo = 0;
 
             foreach ($messagesPending as $message) {
+
+                $qt_disparo++;
 
                 if ($disparos->status == 'paused') {
                     echo "Dispatch paused, waiting for user action\n";
@@ -84,26 +90,28 @@ class SendMessagesCommand extends Command
                         break;
                 }
 
-                $qt_disparo++;
-
-                echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
-
-                if ($qt_disparo >= $random) {
-                    echo "Limit of {$random} messages reached, waiting {$sleep} seconds\n";
-                    $qt_disparo = 0;
-                    sleep($sleep);
-                }
-
                 if($message->template->type == 'text') {
 
-                    $sendText = Service::WhatsApp("sendText", [
-                        "Bearer" => $token,
-                        "DeviceToken" => $randomDevice->device_token,
-                        "body" => [
-                            "number" => $message->contato->number,
-                            "text" => $messageParsed
-                        ]
-                    ]);
+                    try {
+
+                        $sendText = Service::WhatsApp("sendText", [
+                            "Bearer" => $token,
+                            "DeviceToken" => $randomDevice->device_token,
+                            "body" => [
+                                "number" => $message->contato->number,
+                                "text" => $messageParsed
+                            ]
+                        ]);
+
+                    } catch (\GuzzleHttp\Exception\RequestException $th) {
+
+                        echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
+                        $disparos->status = 'canceled';
+                        $disparos->save();
+
+                        return;
+                        
+                    }
 
                     if (!isset($sendText->response->result) or $sendText->response->result != 200) {
                         $message->status = 'error';
@@ -120,20 +128,31 @@ class SendMessagesCommand extends Command
 
                 if( $message->template->type == 'file' or $message->template->type == 'image' ) {
 
-                    $sendFile = Service::WhatsApp("sendFile", [
-                        "Bearer" => $token,
-                        "DeviceToken" => $randomDevice->device_token,
-                        "body" => [
-                            "number" => $message->contato->number,
-                            "path" => $message->template->path,
-                            "options" => [
-                                "caption" => $messageParsed,
-                                "createChat" > true,
-                                "filename" => basename($message->template->path)
-                            ]
-                        ]
-                    ]);
+                    try {
 
+                        $sendFile = Service::WhatsApp("sendFile", [
+                            "Bearer" => $token,
+                            "DeviceToken" => $randomDevice->device_token,
+                            "body" => [
+                                "number" => $message->contato->number,
+                                "path" => $message->template->path,
+                                "options" => [
+                                    "caption" => $messageParsed,
+                                    "createChat" > true,
+                                    "filename" => basename($message->template->path)
+                                ]
+                            ]
+                        ]);
+                        
+                    } catch (\GuzzleHttp\Exception\RequestException $th) {
+
+                        echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
+                        $disparos->status = 'cancelled';
+                        $disparos->save();
+
+                        return;
+                        
+                    }
                     if (!isset($sendFile->response->result) or $sendFile->response->result != 200) {
                         $message->status = 'error';
                         $message->log = json_encode($sendFile);
@@ -147,6 +166,14 @@ class SendMessagesCommand extends Command
                     $message->send_at = now();
                     $message->save();
 
+                }
+                
+                echo "Disparo {$qt_disparo} de {$message->contato->name}\n";
+
+                if ($qt_disparo >= $random) {
+                    echo "Limit of {$random} messages reached, waiting {$sleep} seconds\n";
+                    $qt_disparo = 0;
+                    sleep($sleep);
                 }
 
             }
