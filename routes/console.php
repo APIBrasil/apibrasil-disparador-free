@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Artisan;
 // })->purpose('Display an inspiring quote')->hourly();
 
 //run php artisan app:send-messages-command
-Artisan::command('app:send-messages-command', function () {
-    $this->info('Messages sent successfully!');
-})->purpose('Send messages to users')->daily();
+// Artisan::command('app:send-messages-command', function () {
+//     $this->info('Messages sent successfully!');
+// })->purpose('Send messages to users')->daily();
