@@ -25,6 +25,7 @@
                             <th scope="col">Pendentes</th>
                             <th scope="col">Enviadas</th>
                             <th scope="col">Modo</th>
+                            <th scope="col">Status</th>
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
