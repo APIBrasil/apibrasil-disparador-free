@@ -25,6 +25,7 @@
                             <th scope="col">Pendentes</th>
                             <th scope="col">Enviadas</th>
                             <th scope="col">Modo</th>
+                            <th scope="col">Status</th>
                             <th scope="col" style="width: 200px">Ações</th>
                         </tr>
                         </thead>
@@ -100,6 +101,7 @@
                             <option value="">Selecione</option>
                             <option value="pending">Pendente</option>
                             <option value="paused">Pausado</option>
+                            <option value="canceled">Cancelado</option>
                             <option value="finished">Finalizado</option>
                         </select>
                     </div>

@@ -25,6 +25,8 @@ class SendMessagesCommand extends Command
     public function handle()
     {
 
+        info('Command runs every minute.');
+
         $disparos = Disparos::where('status', 'pending')
         ->with('messagesPending')
         ->get();
@@ -147,7 +149,7 @@ class SendMessagesCommand extends Command
                     } catch (\GuzzleHttp\Exception\RequestException $th) {
 
                         echo "Erro ao enviar mensagem: " . $th->getMessage() . "\n";
-                        $disparos->status = 'cancelled';
+                        $disparos->status = 'canceled';
                         $disparos->save();
 
                         return;
