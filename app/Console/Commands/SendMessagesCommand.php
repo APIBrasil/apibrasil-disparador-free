@@ -25,6 +25,8 @@ class SendMessagesCommand extends Command
     public function handle()
     {
 
+        info('Command runs every minute.');
+
         $disparos = Disparos::where('status', 'pending')
         ->with('messagesPending')
         ->get();
