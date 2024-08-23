@@ -101,6 +101,7 @@
                             <option value="">Selecione</option>
                             <option value="pending">Pendente</option>
                             <option value="paused">Pausado</option>
+                            <option value="canceled">Cancelado</option>
                             <option value="finished">Finalizado</option>
                         </select>
                     </div>
